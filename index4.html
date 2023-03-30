@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jsPDF Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+        #create-pdf {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        #create-pdf:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/jspdf-autotable@3.5.23/dist/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+<button id="create-pdf">Create PDF</button>
+<script>
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+const infoText = decodeURIComponent(getQueryParam('infoText'));
+const data = JSON.parse(infoText);
+
+document.getElementById("create-pdf").addEventListener("click", function () {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(12);
+
+    const headerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1680087506/header1_iibqfp.jpg";
+    const footerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1680087505/footer1_uanlwv.jpg";
+
+    // Replace with the actual aspect ratios of your header and footer images
+    const headerAspectRatio = 2481 / 547;
+    const footerAspectRatio = 2481 / 212;
+
+    const headerWidth = 210; // A4 page width in mm
+    const headerHeight = headerWidth / headerAspectRatio;
+
+    const footerWidth = 210; // A4 page width in mm
+    const footerHeight = footerWidth / footerAspectRatio;
+
+    // Create a custom header and footer
+    const header = function(data) {
+        doc.addImage(headerImageUrl, 'PNG', 0, 0, headerWidth, headerHeight);
+    };
+
+    const footer = function(data) {
+        doc.addImage(footerImageUrl, 'PNG', 0, 297 - footerHeight, footerWidth, footerHeight);
+    };
+
+    // Set up the autoTable options
+    const options = {
+        startY: headerHeight + 5,
+
+beforePageContent: header,
+afterPageContent: footer,
+margin: {top: 10}
+    };
+
+    function addText(text, x, y) {
+        doc.text(text, x, y);
+    }
+
+    // Add patient details
+    const patientDetails = [
+        {title: `Patient Name: ${data.patientName}`, x: 10, y: options.startY},
+        {title: `Phone Number: ${data.phoneNumber}`, x: 10, y: options.startY + 10},
+        {title: `Gender: ${data.gender}`, x: 10, y: options.startY + 20},
+        {title: `Date of Birth: ${data.dateOfBirth}`, x: 10, y: options.startY + 30},
+        {title: `Age: ${data.age}`, x: 10, y: options.startY + 40},
+    ];
+
+    patientDetails.forEach(detail => {
+        addText(detail.title, detail.x, detail.y);
+    });
+
+    // Add other details
+    const otherDetails = [
+        {title: `Past History of Illness: ${data.pastHistoryOfIllness}`, x: 10, y: options.startY + 60},
+        {title: `Family History: ${data.familyHistory}`, x: 10, y: options.startY + 70},
+        {title: `Medications Allopathy: ${data.medicationsAllopathy}`, x: 10, y: options.startY + 80},
+        {title: `Allergies Medicine Food: ${data.allergiesMedicineFood}`, x: 10, y: options.startY + 90},
+    ];
+
+    otherDetails.forEach(detail => {
+        addText(detail.title, detail.x, detail.y);
+    });
+
+    // Add visit details
+    const visitDetails = [
+        {title: `Visit Date: ${data.visitDate}`, x: 10, y: options.startY + 110},
+        {title: `Present Complaints: ${data.presentComplaints}`, x: 10, y: options.startY + 120},
+        {title: `Next Visit: ${data.nextVisit}`, x: 10, y: options.startY + 130},
+        {title: `Pending Visit Amount: ${data.pendingVisitAmount}`, x: 10, y: options.startY + 140},
+    ];
+
+    visitDetails.forEach(detail => {
+        addText(detail.title, detail.x, detail.y);
+    });
+
+    // Add medicines
+    const medicines = [];
+
+    for (let i = 1; i <= 15; i++) {
+        if (data[`medicine${i}`]) {
+            medicines.push({
+                title: `Medicine ${i}: ${data[`medicine${i}`]}`,
+                x: 10,
+                y: options.startY + 150 + (i - 1) * 60,
+            });
+            medicines.push({title: `  Display Name: ${data[`displayName${i}`]}`, x: 10, y: options.startY + 160 + (i - 1) * 60});
+            medicines.push({title: `  Dosage: ${data[`dosage${i}`]}`, x: 10, y: options.startY + 170 + (i - 1) * 60});
+            medicines.push({title: `  Frequency: ${data[`frequency${i}`]}`, x: 10, y: options.startY + 180 + (i - 1) * 60});
+            medicines.push({title: `  Selected Timings: ${data[`selectedTimings${i}`]}`, x: 10, y: options.startY + 190 + (i - 1) * 60});
+            medicines.push({title: `  Meal: ${data[`meal${i}`]}`, x: 10, y: options.startY + 200 + (i - 1) * 60});
+            medicines.push({title: `  Duration: ${data[`duration${i}`]}`, x: 10, y: options.startY + 210 + (i - 1) * 60});
+            medicines.push({title: `  Notes: ${data[`notes${i}`]}`, x: 10, y: options.startY + 220 + (i - 1) * 60});
+        }
+    }
+
+    medicines.forEach(medicine => {
+        doc.setFont('times', 'italic');
+        addText(medicine.title, medicine.x, medicine.y);
+    });
+
+    // Add additional details
+    const additionalDetails = [
+        {title: `Total Cost of Medicines: ${data.totalCostOfMedicines}`, x: 10, y: options.startY + 1060},
+        {title: `Pending Medicine Amount: ${data.pendingMedicineAmount}`, x: 10, y: options.startY + 1070},
+        {title: `Any Other Remarks: ${data.anyOtherRemarks}`, x: 10, y: options.startY + 1080},
+        {title: `Patient ID: ${data.patientId}`, x: 10, y: options.startY + 1090},
+    ];
+
+    additionalDetails.forEach(detail => {
+        addText(detail.title, detail.x, detail.y);
+    });
+
+    // Save the PDF
+    doc.save("Ayurvedic_Prescription.pdf");
+});
+</script>
+</body>
+</html>
+
