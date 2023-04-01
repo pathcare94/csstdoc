@@ -65,20 +65,24 @@ document.getElementById("create-pdf").addEventListener("click", function () {
     }
 
     function addText(text) {
-        const pageHeight = 297; // A4 page height in mm
-        const textMargin = 10;
+    const pageHeight = 297; // A4 page height in mm
+    const textMargin = 10;
+    const maxLineWidth = 190; // Set max line width for text
 
-        if (lineHeight >= (pageHeight - footerHeight - textMargin)) {
-            doc.addPage();
-            addHeaderAndFooter(); // Add header and footer to the new page
-            lineHeight = headerHeight + 5;
-        }
+    const wrappedText = doc.splitTextToSize(text, maxLineWidth);
 
-        doc.setFontSize(12);
-        doc.setFont('helvetica', 'normal');
-        doc.text(text, 10, lineHeight);
-        lineHeight += 7;
+    if (lineHeight + (wrappedText.length * 7) >= (pageHeight - footerHeight - textMargin)) {
+        doc.addPage();
+        addHeaderAndFooter(); // Add header and footer to the new page
+        lineHeight = headerHeight + 5;
     }
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.text(wrappedText, 10, lineHeight);
+    lineHeight += wrappedText.length * 7;
+}
+
 
     function addDivider() {
         doc.setLineWidth(0.5);
