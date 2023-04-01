@@ -140,6 +140,8 @@ document.getElementById("create-pdf").addEventListener("click", function () {
     addText(`Pending Medicine Amount: ${data.pendingMedicineAmount}`);
     addText(`Any Other Remarks: ${data.anyOtherRemarks}`);
     addText(`Patient ID: ${data.patientId}`);
+    addText(`Selected Tests: ${data.selectedTests}`);
+    addText(`Courier: ${data.courier}`);
 
     // Save the PDF
     doc.save("Ayurvedic_Prescription.pdf");
