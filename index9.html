@@ -118,24 +118,30 @@ document.getElementById("create-pdf").addEventListener("click", function () {
     addText(`Pending Visit Amount: ${data.pendingVisitAmount}`);
     addDivider();
 
-    // Add medicines
-    addSectionTitle("Medicines");
-    doc.setFont('times', 'italic');
-    for (let i = 1; i <= 15; i++) {
+      // Add medicines
+      addSectionTitle("Medicines");
+      doc.setFont("times", "italic");
+      for (let i = 1; i <= 15; i++) {
         if (data[`medicine${i}`]) {
-            addText(`Medicine ${i}: ${data[`medicine${i}`]}`);
+          let medicineName = data[`medicine${i}`];
+          if (data[`displaystate${i}`]) {
+            medicineName = data[`displayName${i}`];
+          }
+          addText(`Medicine ${i}: ${medicineName}`);
+          if (!data[`displaystate${i}`]) {
             addText(`  Display Name: ${data[`displayName${i}`]}`);
-            addText(`  Dosage: ${data[`dosage${i}`]}`);
-            addText(`  Frequency: ${data[`frequency${i}`]}`);
-            addText(`  Selected Timings: ${data[`selectedTimings${i}`]}`);
-            addText(`  Meal: ${data[`meal${i}`]}`);
-            addText(`  Duration: ${data[`duration${i}`]}`);
-            addText(`  Notes: ${data[`notes${i}`]}`);
-            if (i < 15) {
-                lineHeight += 5; // Add extra space between medicines
-            }
+          }
+          addText(`  Dosage: ${data[`dosage${i}`]}`);
+          addText(`  Frequency: ${data[`frequency${i}`]}`);
+          addText(`  Selected Timings: ${data[`selectedTimings${i}`]}`);
+          addText(`  Meal: ${data[`meal${i}`]}`);
+          addText(`  Duration: ${data[`duration${i}`]}`);
+          addText(`  Notes: ${data[`notes${i}`]}`);
+          if (i < 15) {
+            lineHeight += 5; // Add extra space between medicines
+          }
         }
-    }
+      }
 
     // Add additional details
     addDivider();
