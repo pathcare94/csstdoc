@@ -123,7 +123,7 @@ addSectionTitle("Medicines");
 doc.setFont('times', 'italic');
 for (let i = 1; i <= 15; i++) {
     if (data[`medicine${i}`]) {
-     const medicineName = data[`displaystates`][i - 1] ? data[`displayName${i}`] : data[`medicine${i}`];
+   const medicineName = data.displaystates[i - 1] ? data[`displayName${i}`] : data[`medicine${i}`];
         addText(`Medicine ${i}: ${medicineName}`);
         // Comment the following line to remove the "Display Name" line from the PDF
         // addText(`  Display Name: ${data[`displayName${i}`]}`);
