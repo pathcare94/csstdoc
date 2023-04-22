@@ -49,16 +49,19 @@ const infoText = decodeURIComponent(getQueryParam('infoText'));
 const data = JSON.parse(infoText);
 
 function formatDate(dateString) {
-    const date = new Date(dateString);
+    const dateParts = dateString.split('-');
+    const year = parseInt(dateParts[0], 10);
+    const month = parseInt(dateParts[1], 10) - 1; // Months are zero-indexed
+    const day = parseInt(dateParts[2], 10);
+
+    const date = new Date(Date.UTC(year, month, day));
     const options = {
         timeZone: 'UTC',
         day: '2-digit',
         month: 'long',
         year: 'numeric',
     };
-    // Add the timezone offset to the date
-    const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-    return new Intl.DateTimeFormat('en-US', options).format(utcDate);
+    return new Intl.DateTimeFormat('en-US', options).format(date);
 }
 
     function createPdf(includeImages) {
