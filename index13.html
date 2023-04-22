@@ -49,19 +49,23 @@ const infoText = decodeURIComponent(getQueryParam('infoText'));
 const data = JSON.parse(infoText);
 
 function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = {
+        timeZone: 'UTC',
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+    };
+    return new Intl.DateTimeFormat('en-US', options).format(date);
+}
+
+function adjustDate(dateString) {
     const dateParts = dateString.split('-');
     const year = parseInt(dateParts[0], 10);
-    const month = parseInt(dateParts[1], 10) - 1;
-    const day = parseInt(dateParts[2], 10);
+    const month = parseInt(dateParts[1], 10);
+    const day = parseInt(dateParts[2], 10) + 1;
 
-    const date = new Date(year, month, day);
-
-    const months = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-
-    return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+    return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
 }
 
     function createPdf(includeImages) {
@@ -129,7 +133,7 @@ function addHeaderAndFooter() {
     addText(`Name: ${data.patientName}`);
     addText(`Phone Number: ${data.phoneNumber}`);
     addText(`Gender: ${data.gender}`);
-    addText(`Date of Birth: ${formatDate(data.dateOfBirth)}`);
+    addText(`Date of Birth: ${formatDate(adjustDate(data.dateOfBirth))}`);
     addText(`Age: ${data.age}`);
     addDivider();
 
@@ -143,9 +147,9 @@ function addHeaderAndFooter() {
 
     // Add visit details
     addSectionTitle("Visit Details");
-    addText(`Visit Date: ${formatDate(data.visitDate)}`);
+    addText(`Visit Date: ${formatDate(adjustDate(data.visitDate))}`);
     addText(`Present Complaints: ${data.presentComplaints}`);
-    addText(`Next Visit: ${formatDate(data.nextVisit)}`);
+    addText(`Next Visit: ${formatDate(adjustDate(data.nextVisit))}`);
     addText(`Pending Visit Amount: ${data.pendingVisitAmount}`);
     addDivider();
 
