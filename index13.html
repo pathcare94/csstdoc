@@ -51,23 +51,16 @@ const data = JSON.parse(infoText);
 function formatDate(dateString) {
     const dateParts = dateString.split('-');
     const year = parseInt(dateParts[0], 10);
-    const month = parseInt(dateParts[1], 10) - 1; // Months are zero-indexed
+    const month = parseInt(dateParts[1], 10);
     const day = parseInt(dateParts[2], 10);
 
-    const date = new Date(year, month, day);
-    const timezoneOffset = date.getTimezoneOffset() * 60000;
-    const adjustedDate = new Date(date.getTime() + timezoneOffset);
-
-    const monthNames = [
+    const months = [
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
     ];
 
-    return `${monthNames[adjustedDate.getMonth()]} ${adjustedDate.getDate()}, ${adjustedDate.getFullYear()}`;
+    return `${day} ${months[month - 1]} ${year}`;
 }
-
-
-
 
     function createPdf(includeImages) {
         const { jsPDF } = window.jspdf;
