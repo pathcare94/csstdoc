@@ -54,15 +54,18 @@ function formatDate(dateString) {
     const month = parseInt(dateParts[1], 10) - 1; // Months are zero-indexed
     const day = parseInt(dateParts[2], 10);
 
-    const date = new Date(Date.UTC(year, month, day));
+    const date = new Date(year, month, day);
+    const timezoneOffset = date.getTimezoneOffset() * 60000;
+    const adjustedDate = new Date(date.getTime() + timezoneOffset);
 
     const monthNames = [
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
     ];
 
-    return `${monthNames[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()}`;
+    return `${monthNames[adjustedDate.getMonth()]} ${adjustedDate.getDate()}, ${adjustedDate.getFullYear()}`;
 }
+
 
 
 
