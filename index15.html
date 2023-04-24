@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jsPDF Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            font-size: 16px;
+        }
+        #create-pdf {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #create-pdf:hover {
+            background-color: #45a049;
+        }
+
+        #create-pdf-no-images {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        #create-pdf-no-images:hover {
+            background-color: #1E88E5;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+</head>
+<body>
+<button id="create-pdf">Create PDF</button>
+<button id="create-pdf-no-images">Create PDF (No Images)</button>
+<script>
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+const infoText = decodeURIComponent(getQueryParam('infoText'));
+const data = JSON.parse(infoText);
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = {
+        timeZone: 'UTC',
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+    };
+    // Add the timezone offset to the date
+    const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+    return new Intl.DateTimeFormat('en-US', options).format(utcDate);
+}
+
+    function createPdf(includeImages) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.setFontSize(12);
+
+    const headerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1680087506/header1_iibqfp.jpg";
+    const footerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1680087505/footer1_uanlwv.jpg";
+
+    const headerAspectRatio = 2481 / 547;
+    const footerAspectRatio = 2481 / 212;
+
+    const headerWidth = 210; // A4 page width in mm
+    const headerHeight = headerWidth / headerAspectRatio;
+
+    const footerWidth = 210; // A4 page width in mm
+    const footerHeight = footerWidth / footerAspectRatio;
+
+function addHeaderAndFooter() {
+    if (includeImages) {
+        doc.addImage(headerImageUrl, 'PNG', 0, 0, headerWidth, headerHeight);
+        doc.addImage(footerImageUrl, 'PNG', 0, 297 - footerHeight, footerWidth, footerHeight);
+    }
+}
+
+    function addSectionTitle(title) {
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text(title, 10, lineHeight);
+        lineHeight += 10;
+    }
+
+    function addText(text) {
+    const pageHeight = 297; // A4 page height in mm
+    const textMargin = 10;
+    const maxLineWidth = 190; // Set max line width for text
+
+    const wrappedText = doc.splitTextToSize(text, maxLineWidth);
+
+    if (lineHeight + (wrappedText.length * 7) >= (pageHeight - footerHeight - textMargin)) {
+        doc.addPage();
+        addHeaderAndFooter(); // Add header and footer to the new page
+        lineHeight = headerHeight + 5;
+    }
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.text(wrappedText, 10, lineHeight);
+    lineHeight += wrappedText.length * 7;
+}
+
+
+    function addDivider() {
+        doc.setLineWidth(0.5);
+        doc.line(10, lineHeight - 3, 200, lineHeight - 3);
+        lineHeight += 7;
+    }
+
+    addHeaderAndFooter();
+    let lineHeight = headerHeight + 5;
+
+    // Add patient details
+    addSectionTitle("Patient Details");
+    addText(`Name: ${data.patientName}`);
+    addText(`Phone Number: ${data.phoneNumber}`);
+    addText(`Gender: ${data.gender}`);
+    addText(`Date of Birth: ${formatDate(data.dateOfBirth)}`);
+    addText(`Age: ${data.age}`);
+    addDivider();
+
+    // Add other details
+    addSectionTitle("Medical History");
+    addText(`Past History of Illness: ${data.pastHistoryOfIllness}`);
+    addText(`Family History: ${data.familyHistory}`);
+    addText(`Medications Allopathy: ${data.medicationsAllopathy}`);
+    addText(`Allergies Medicine Food: ${data.allergiesMedicineFood}`);
+    addDivider();
+
+    // Add visit details
+    addSectionTitle("Visit Details");
+    addText(`Visit Date: ${formatDate(data.visitDate)}`);
+    addText(`Present Complaints: ${data.presentComplaints}`);
+    addText(`Next Visit: ${formatDate(data.nextVisit)}`);
+    addText(`Pending Visit Amount: ${data.pendingVisitAmount}`);
+    addDivider();
+
+// Add medicines
+addSectionTitle("Medicines");
+doc.setFont('times', 'italic');
+doc.setLineWidth(0.5);
+
+const tableHeader = ['S.No', 'Medicine', 'Dosage', 'Frequency', 'Timings', 'Meal', 'Duration'];
+const columnWidths = [15, 60, 25, 25, 35, 20, 25];
+
+function drawHeader() {
+    doc.setFont('helvetica', 'bold');
+    let xPos = 10;
+    for (let i = 0; i < tableHeader.length; i++) {
+        drawCell(xPos, lineHeight - 6, columnWidths[i], 10);
+        doc.text(tableHeader[i], xPos + 2, lineHeight + 2);
+        xPos += columnWidths[i];
+    }
+    lineHeight += 10;
+    doc.setFont('times', 'italic');
+}
+
+function drawRow(serial, medicineName, dosage, frequency, timings, meal, duration) {
+    let xPos = 10;
+    const cellHeight = 10;
+    const rowData = [serial, medicineName, dosage, frequency, timings, meal, duration];
+
+    for (let i = 0; i < rowData.length; i++) {
+        drawCell(xPos, lineHeight - 6, columnWidths[i], cellHeight);
+        doc.text(rowData[i].toString(), xPos + 2, lineHeight + 2);
+        xPos += columnWidths[i];
+    }
+    lineHeight += cellHeight;
+}
+
+drawHeader();
+
+for (let i = 1; i <= 15; i++) {
+    if (data[`medicine${i}`]) {
+        const medicineName = data.displaystates[i - 1] ? data[`displayName${i}`] : data[`medicine${i}`];
+        drawRow(
+            i,
+            medicineName,
+            data[`dosage${i}`],
+            data[`frequency${i}`],
+            data[`selectedTimings${i}`],
+            data[`meal${i}`],
+            data[`duration${i}`]
+        );
+    }
+}
+
+
+
+    // Add additional details
+    addDivider();
+    addSectionTitle("Additional Details");
+    addText(`Total Cost of Medicines: ${data.totalCostOfMedicines}`);
+    addText(`Pending Medicine Amount: ${data.pendingMedicineAmount}`);
+    addText(`Any Other Remarks: ${data.anyOtherRemarks}`);
+    addText(`Patient ID: ${data.patientId}`);
+    addText(`Selected Tests: ${data.selectedTests}`);
+    addText(`Courier: ${data.courier}`);
+
+    // Save the PDF
+    doc.save("Ayurvedic_Prescription.pdf");
+    }
+
+    document.getElementById("create-pdf").addEventListener("click", function () {
+        createPdf(true);
+    });
+
+    document.getElementById("create-pdf-no-images").addEventListener("click", function () {
+        createPdf(false);
+});
+</script>
+</body>
+</html>
