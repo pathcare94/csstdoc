@@ -151,26 +151,20 @@ doc.setFont('helvetica', 'normal');
 doc.setLineWidth(0.5);
 
 const tableHeader = ['S.No', 'Medicine', 'Dosage', 'Frequency', 'Timings', 'Meal', 'Duration'];
-const columnWidths = [15, 58, 25, 25, 35, 20, 10];
+const columnWidths = [15, 43, 25, 25, 35, 20, 25];
 
 function drawHeader() {
     doc.setFont('helvetica', 'bold');
-    let xPos = 10;
+    let xPos = 12;
     for (let i = 0; i < tableHeader.length; i++) {
         drawCell(xPos, lineHeight - 6, columnWidths[i], 10);
-
-        // Calculate text width to center the text within the cell
-        const textWidth = doc.getTextWidth(tableHeader[i]);
-        const textXPos = xPos + (columnWidths[i] - textWidth) / 2;
-
         doc.setFontSize(12); // Use the same font size as the rest of the document
-        doc.text(tableHeader[i], textXPos, lineHeight + 2);
+        doc.text(tableHeader[i], xPos + 2, lineHeight + 2);
         xPos += columnWidths[i];
     }
     lineHeight += 10;
     doc.setFont('helvetica', 'normal');
 }
-
 
 function drawRow(serial, medicineName, dosage, frequency, timings, meal, duration) {
     let xPos = 12;
