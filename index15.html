@@ -146,18 +146,16 @@ function addHeaderAndFooter() {
     addText(`Pending Visit Amount: ${data.pendingVisitAmount}`);
     addDivider();
 
-// ... Other parts of the code remain the same
-
 // Add medicines
 doc.setFont('helvetica', 'normal');
 doc.setLineWidth(0.5);
 
 const tableHeader = ['S.No', 'Medicine', 'Dosage', 'Frequency', 'Timings', 'Meal', 'Duration'];
-const columnWidths = [15, 60, 25, 25, 35, 20, 25];
+const columnWidths = [15, 58, 25, 25, 35, 20, 10];
 
 function drawHeader() {
     doc.setFont('helvetica', 'bold');
-    let xPos = 10;
+    let xPos = 12;
     for (let i = 0; i < tableHeader.length; i++) {
         drawCell(xPos, lineHeight - 6, columnWidths[i], 10);
         doc.setFontSize(12); // Use the same font size as the rest of the document
@@ -169,7 +167,7 @@ function drawHeader() {
 }
 
 function drawRow(serial, medicineName, dosage, frequency, timings, meal, duration) {
-    let xPos = 10;
+    let xPos = 12;
     const rowData = [serial, medicineName, dosage, frequency, timings, meal, duration];
 
     let maxRowHeight = 10;
@@ -192,6 +190,7 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
     }
     lineHeight += maxRowHeight;
 }
+
 function drawCell(x, y, width, height) {
     doc.rect(x, y, width, height);
 }
@@ -212,8 +211,6 @@ for (let i = 1; i <= 15; i++) {
         );
     }
 }
-
-// ... Other parts of the code remain the same
 
 
 
