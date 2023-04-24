@@ -148,16 +148,11 @@ function addHeaderAndFooter() {
 
 // Add medicines
 addSectionTitle("Medicines");
-doc.setFont('times', 'italic');
+doc.setFont('helvetica', 'normal'); // Changed from 'times', 'italic' to 'helvetica', 'normal'
 doc.setLineWidth(0.5);
 
 const tableHeader = ['S.No', 'Medicine', 'Dosage', 'Frequency', 'Timings', 'Meal', 'Duration'];
 const columnWidths = [15, 60, 25, 25, 35, 20, 25];
-        
-function drawCell(x, y, width, height) {
-    doc.rect(x, y, width, height);
-}
-
 
 function drawHeader() {
     doc.setFont('helvetica', 'bold');
@@ -168,7 +163,7 @@ function drawHeader() {
         xPos += columnWidths[i];
     }
     lineHeight += 10;
-    doc.setFont('times', 'italic');
+    doc.setFont('helvetica', 'normal'); // Changed from 'times', 'italic' to 'helvetica', 'normal'
 }
 
 function drawRow(serial, medicineName, dosage, frequency, timings, meal, duration) {
@@ -178,10 +173,16 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
 
     for (let i = 0; i < rowData.length; i++) {
         drawCell(xPos, lineHeight - 6, columnWidths[i], cellHeight);
-        doc.text(rowData[i].toString(), xPos + 2, lineHeight + 2);
+
+        // Wrap text if it doesn't fit in the cell
+        const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 4);
+        doc.text(cellText, xPos + 2, lineHeight + 2);
         xPos += columnWidths[i];
     }
     lineHeight += cellHeight;
+}
+function drawCell(x, y, width, height) {
+    doc.rect(x, y, width, height);
 }
 
 drawHeader();
