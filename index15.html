@@ -97,7 +97,7 @@ function addHeaderAndFooter() {
     const textMargin = 10;
     const maxLineWidth = 190; // Set max line width for text
 
-    const wrappedText = doc.splitTextToSize(text, maxLineWidth);
+const wrappedText = doc.splitTextToSize(text, maxLineWidth);
 
     if (lineHeight + (wrappedText.length * 7) >= (pageHeight - footerHeight - textMargin)) {
         doc.addPage();
@@ -110,7 +110,6 @@ function addHeaderAndFooter() {
     doc.text(wrappedText, 10, lineHeight);
     lineHeight += wrappedText.length * 7;
 }
-
 
     function addDivider() {
         doc.setLineWidth(0.5);
@@ -128,22 +127,12 @@ function addHeaderAndFooter() {
     addText(`Gender: ${data.gender}`);
     addText(`Date of Birth: ${formatDate(data.dateOfBirth)}`);
     addText(`Age: ${data.age}`);
-    addDivider();
-
-    // Add other details
-    addSectionTitle("Medical History");
-    addText(`Past History of Illness: ${data.pastHistoryOfIllness}`);
-    addText(`Family History: ${data.familyHistory}`);
-    addText(`Medications Allopathy: ${data.medicationsAllopathy}`);
-    addText(`Allergies Medicine Food: ${data.allergiesMedicineFood}`);
+    doc.text(`Visit Date: ${formatDate(data.visitDate)}`, 150, lineHeight - (7 * 4));
     addDivider();
 
     // Add visit details
     addSectionTitle("Visit Details");
-    addText(`Visit Date: ${formatDate(data.visitDate)}`);
     addText(`Present Complaints: ${data.presentComplaints}`);
-    addText(`Next Visit: ${formatDate(data.nextVisit)}`);
-    addText(`Pending Visit Amount: ${data.pendingVisitAmount}`);
     addDivider();
 
 // Add medicines
@@ -217,24 +206,22 @@ for (let i = 1; i <= 15; i++) {
     // Add additional details
     addDivider();
     addSectionTitle("Additional Details");
-    addText(`Total Cost of Medicines: ${data.totalCostOfMedicines}`);
-    addText(`Pending Medicine Amount: ${data.pendingMedicineAmount}`);
-    addText(`Any Other Remarks: ${data.anyOtherRemarks}`);
-    addText(`Patient ID: ${data.patientId}`);
-    addText(`Selected Tests: ${data.selectedTests}`);
-    addText(`Courier: ${data.courier}`);
+    addText(`Next Visit: ${formatDate(data.nextVisit)}`);
+    addText(`Advised: ${data.selectedTests}`);
+    addText(`Duration: ${data.duration} days`);
 
     // Save the PDF
     doc.save("Ayurvedic_Prescription.pdf");
-    }
+}
 
-    document.getElementById("create-pdf").addEventListener("click", function () {
-        createPdf(true);
-    });
+document.getElementById("create-pdf").addEventListener("click", function () {
+    createPdf(true);
+});
 
-    document.getElementById("create-pdf-no-images").addEventListener("click", function () {
-        createPdf(false);
+document.getElementById("create-pdf-no-images").addEventListener("click", function () {
+    createPdf(false);
 });
 </script>
 </body>
 </html>
+
