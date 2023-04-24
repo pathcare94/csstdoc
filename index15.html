@@ -157,7 +157,7 @@ function drawHeader() {
 
 function drawRow(serial, medicineName, dosage, frequency, timings, meal, duration) {
     let xPos = 12;
-    const rowData = [serial, medicineName, dosage, frequency, timings, meal, duration];
+    const rowData = [serial, medicineName, dosage, frequency, timings, meal, `${duration} days`];
 
     let maxRowHeight = 10;
     for (let i = 0; i < rowData.length; i++) {
@@ -211,7 +211,9 @@ for (let i = 1; i <= 15; i++) {
     addText(`Duration: ${data.duration} days`);
 
     // Save the PDF
-    doc.save("Ayurvedic_Prescription.pdf");
+    const formattedVisitDate = formatDate(data.visitDate).replace(/,|\s+/g, '-');
+doc.save(`${data.patientName.replace(/\s+/g, '_')}_${formattedVisitDate}.pdf`);
+
 }
 
 document.getElementById("create-pdf").addEventListener("click", function () {
