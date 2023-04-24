@@ -208,7 +208,7 @@ for (let i = 1; i <= 15; i++) {
     addSectionTitle("Additional Details");
     addText(`Next Visit: ${formatDate(data.nextVisit)}`);
     addText(`Advised: ${data.selectedTests}`);
-    addText(`Duration: ${data.duration} days`);
+    
 
     // Save the PDF
     const formattedVisitDate = formatDate(data.visitDate).replace(/,|\s+/g, '-');
