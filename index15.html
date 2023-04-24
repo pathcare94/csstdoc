@@ -153,6 +153,11 @@ doc.setLineWidth(0.5);
 
 const tableHeader = ['S.No', 'Medicine', 'Dosage', 'Frequency', 'Timings', 'Meal', 'Duration'];
 const columnWidths = [15, 60, 25, 25, 35, 20, 25];
+        
+function drawCell(x, y, width, height) {
+    doc.rect(x, y, width, height);
+}
+
 
 function drawHeader() {
     doc.setFont('helvetica', 'bold');
