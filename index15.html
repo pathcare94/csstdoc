@@ -146,9 +146,10 @@ function addHeaderAndFooter() {
     addText(`Pending Visit Amount: ${data.pendingVisitAmount}`);
     addDivider();
 
+// ... Other parts of the code remain the same
+
 // Add medicines
-addSectionTitle("Medicines");
-doc.setFont('helvetica', 'normal'); // Changed from 'times', 'italic' to 'helvetica', 'normal'
+doc.setFont('helvetica', 'normal');
 doc.setLineWidth(0.5);
 
 const tableHeader = ['S.No', 'Medicine', 'Dosage', 'Frequency', 'Timings', 'Meal', 'Duration'];
@@ -159,6 +160,7 @@ function drawHeader() {
     let xPos = 10;
     for (let i = 0; i < tableHeader.length; i++) {
         drawCell(xPos, lineHeight - 6, columnWidths[i], 10);
+        doc.setFontSize(12); // Use the same font size as the rest of the document
         doc.text(tableHeader[i], xPos + 2, lineHeight + 2);
         xPos += columnWidths[i];
     }
@@ -184,6 +186,7 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
 
         // Wrap text if it doesn't fit in the cell
         const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 4);
+        doc.setFontSize(12); // Use the same font size as the rest of the document
         doc.text(cellText, xPos + 2, lineHeight + 2);
         xPos += columnWidths[i];
     }
@@ -209,6 +212,8 @@ for (let i = 1; i <= 15; i++) {
         );
     }
 }
+
+// ... Other parts of the code remain the same
 
 
 
