@@ -180,21 +180,20 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
     }
     lineHeight += maxRowHeight;
 
-// Add additional notes row if notes are present
-if (notes && notes.trim() !== "") {
-    const notesText = `Notes: ${notes}`;
-    const notesBoxWidth = 190;
-    const wrappedNotesText = doc.splitTextToSize(notesText, notesBoxWidth - 4);
-    const notesHeight = wrappedNotesText.length * 7;
+    // Add additional notes row if notes are present
+    if (notes && notes.trim() !== "") {
+        const notesText = `Notes: ${notes}`;
+        const notesBoxWidth = 190;
+        const wrappedNotesText = doc.splitTextToSize(notesText, notesBoxWidth - 4);
+        const notesHeight = wrappedNotesText.length * 7;
 
-    // Merge all the cells in the row for notes
-    doc.rect(12, lineHeight - 6, notesBoxWidth, notesHeight);
-    doc.text(wrappedNotesText, 14, lineHeight - 6 + 5); // Adjust the vertical position of the notes text
+        // Merge all the cells in the row for notes
+        doc.rect(12, lineHeight - 6, notesBoxWidth, notesHeight);
+        doc.text(wrappedNotesText, 14, lineHeight - 6 + 5); // Adjust the vertical position of the notes text
 
-    lineHeight += notesHeight;
+        lineHeight += notesHeight;
+    }
 }
-
-
 
 
 
@@ -251,4 +250,3 @@ document.getElementById("create-pdf-no-images").addEventListener("click", functi
 </script>
 </body>
 </html>
-
