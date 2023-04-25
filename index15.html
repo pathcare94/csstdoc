@@ -180,10 +180,10 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
     }
     lineHeight += maxRowHeight;
 
-  // Add additional notes row if notes are present
+// Add additional notes row if notes are present
 if (notes && notes.trim() !== "") {
     const notesText = `Notes: ${notes}`;
-    const notesBoxWidth = 188;
+    const notesBoxWidth = 190;
     const wrappedNotesText = doc.splitTextToSize(notesText, notesBoxWidth - 4);
     const notesHeight = wrappedNotesText.length * 7;
 
@@ -193,6 +193,7 @@ if (notes && notes.trim() !== "") {
 
     lineHeight += notesHeight;
 }
+
 
 
 
