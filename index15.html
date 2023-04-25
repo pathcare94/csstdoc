@@ -156,7 +156,7 @@ function drawHeader() {
     doc.setFont('helvetica', 'normal');
 }
 
-function drawRow(serial, medicineName, dosage, frequency, timings, meal, duration) {
+function drawRow(serial, medicineName, dosage, frequency, timings, meal, duration, notes) {
     let xPos = 12;
     const rowData = [serial, medicineName, dosage, frequency, timings, meal, `${duration} days`];
 
@@ -178,7 +178,20 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
         doc.text(cellText, xPos + 2, lineHeight + 2);
         xPos += columnWidths[i];
     }
-    lineHeight += maxRowHeight;
+    // Add additional notes row if notes are present
+if (notes && notes.trim() !== "") {
+    const notesText = `Notes: ${notes}`;
+    const wrappedNotesText = doc.splitTextToSize(notesText, 190); // Set max line width for notes
+    const notesHeight = wrappedNotesText.length * 7;
+
+    // Merge all the cells in the row for notes
+    doc.rect(12, lineHeight - 6, 190, notesHeight);
+    doc.text(wrappedNotesText, 14, lineHeight + 2);
+
+    maxRowHeight += notesHeight;
+}
+
+lineHeight += maxRowHeight;
 }
 
 function drawCell(x, y, width, height) {
@@ -190,6 +203,7 @@ drawHeader();
 for (let i = 1; i <= 15; i++) {
     if (data[`medicine${i}`]) {
         const medicineName = data.displaystates[i - 1] ? data[`displayName${i}`] : data[`medicine${i}`];
+        const notes = data[`notes${i}`] || ""; // Add this line to fetch notes
         drawRow(
             i,
             medicineName,
@@ -197,10 +211,12 @@ for (let i = 1; i <= 15; i++) {
             data[`frequency${i}`],
             data[`selectedTimings${i}`],
             data[`meal${i}`],
-            data[`duration${i}`]
+            data[`duration${i}`],
+            notes // Add this parameter to pass the notes to the drawRow function
         );
     }
 }
+
 
 
 
