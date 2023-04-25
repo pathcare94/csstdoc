@@ -182,16 +182,18 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
     // Add additional notes row if notes are present
     if (notes && notes.trim() !== "") {
         const notesText = `Notes: ${notes}`;
-        const wrappedNotesText = doc.splitTextToSize(notesText, 190 - columnWidths[0]); // Subtract the first column width
+        const notesBoxWidth = 190 - columnWidths[0]; // Adjusted the notes box width here
+        const wrappedNotesText = doc.splitTextToSize(notesText, notesBoxWidth - 4);
         const notesHeight = wrappedNotesText.length * 7;
 
         // Merge all the cells in the row for notes, starting from the second column
-        doc.rect(12 + columnWidths[0], lineHeight - 6, 190 - columnWidths[0], notesHeight);
+        doc.rect(12 + columnWidths[0], lineHeight - 6, notesBoxWidth, notesHeight);
         doc.text(wrappedNotesText, 14 + columnWidths[0], lineHeight + 2);
 
         lineHeight += notesHeight;
     }
 }
+
 
 
 function drawCell(x, y, width, height) {
