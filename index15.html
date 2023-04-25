@@ -179,16 +179,17 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
         xPos += columnWidths[i];
     }
     lineHeight += maxRowHeight;
+
     // Add additional notes row if notes are present
     if (notes && notes.trim() !== "") {
         const notesText = `Notes: ${notes}`;
-        const notesBoxWidth = 190 - columnWidths[0] - 4; // Adjusted the notes box width here
+        const notesBoxWidth = 190;
         const wrappedNotesText = doc.splitTextToSize(notesText, notesBoxWidth - 4);
         const notesHeight = wrappedNotesText.length * 7;
 
-        // Merge all the cells in the row for notes, starting from the second column
-        doc.rect(12 + columnWidths[0], lineHeight - 6, notesBoxWidth, notesHeight);
-        doc.text(wrappedNotesText, 14 + columnWidths[0], lineHeight + 2);
+        // Merge all the cells in the row for notes
+        doc.rect(12, lineHeight - 6, notesBoxWidth, notesHeight);
+        doc.text(wrappedNotesText, 14, lineHeight + 2);
 
         lineHeight += notesHeight;
     }
