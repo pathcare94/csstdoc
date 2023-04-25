@@ -189,7 +189,7 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
 
         // Merge all the cells in the row for notes
         doc.rect(12, lineHeight - 6, notesBoxWidth, notesHeight);
-        doc.text(wrappedNotesText, 14, lineHeight + 2 + 5); // Add 5 to the vertical position of the notes text
+        doc.text(wrappedNotesText, 14, lineHeight - 6 + 5); // Adjust the vertical position of the notes text
 
         lineHeight += notesHeight;
     }
