@@ -1,0 +1,651 @@
+import wixWindow from 'wix-window';
+import wixData from 'wix-data';
+export function refreshDatabase(event) {
+    $w("#dbmedicines").refresh();
+}
+
+
+$w.onReady(async function () {
+  // Initially collapse all forms and disable all delete buttons
+    for (let i = 2; i <= 15; i++) {
+        $w(`#formMed${i}`).collapse();
+        $w(`#btnDelete${i}`).disable();
+    }
+
+      // Fetch data from the dataset
+    let datasetData = await $w("#prescriptionDataset").getCurrentItem();
+    
+    // Retry fetching the data if it's null
+    let retryCount = 0;
+    while (!datasetData && retryCount < 5) {
+        await new Promise(resolve => setTimeout(resolve, 500)); // Wait for 500ms
+        datasetData = await $w("#prescriptionDataset").getCurrentItem();
+        retryCount++;
+    }
+
+    // If data is still null, log an error and return
+    if (!datasetData) {
+        console.error('Failed to load data from dataset.');
+        return;
+    }
+
+    let lastExpandedForm = 1; // Keep track of the last expanded form
+
+    // Expand form if dataset has a value for medicine, otherwise keep it collapsed
+    for (let i = 1; i <= 15; i++) {
+        if (datasetData[`medicine${i}`]) {
+            $w(`#formMed${i}`).expand();
+            lastExpandedForm = i; // Update the last expanded form
+        }
+    }
+
+    // Enable delete button for the last expanded form
+    if (lastExpandedForm > 1) {
+        $w(`#btnDelete${lastExpandedForm}`).enable();
+    }
+
+    // Attach click event handlers to add buttons
+    for (let i = 1; i < 15; i++) {  // No need to add handler for last button
+        attachAddHandler(i);
+    }
+
+    // Attach click event handlers to delete buttons
+    for (let i = 2; i <= 15; i++) {
+        attachDeleteHandler(i);
+    }
+
+        // Add an event listener to the btnPatientPastHistory button
+$w('#btnPatientPastHistory').onClick(() => {
+  // Toggle the visibility of the iptAddPasthistory field
+//  $w('#iptPasthistory').value = '';
+  $w('#iptPasthistory').expand();
+      // Set the focus on the iptAllergies input field
+    $w('#iptPasthistory').focus();
+});
+
+   $w('#iptAddPasthistory').onChange((event) => {
+   if (event.target.value) { // Check if a valid option is selected
+  //  $w("#btnPatientPastHistory").collapse(); // Collapse the element
+     $w("#iptPasthistory").collapse(); // Collapse the element
+  } else {
+    $w("#btnPatientPastHistory").expand(); // Expand the element
+  }
+}); 
+
+
+
+    // Add an event listener to the btnPatientPastHistory button
+$w('#btnFamilyhistory').onClick(() => {
+  // Toggle the visibility of the iptAddPasthistory field
+//  $w('#iptFamilyhistory').value = '';
+  $w('#iptFamilyhistory').expand();
+      // Set the focus on the iptAllergies input field
+    $w('#iptFamilyhistory').focus();
+});
+
+   $w('#iptAddFamilyhistory').onChange((event) => {
+   if (event.target.value) { // Check if a valid option is selected
+  //  $w("#btnFamilyhistory").collapse(); // Collapse the element
+     $w("#iptFamilyhistory").collapse(); // Collapse the element
+  } else {
+    $w("#btnFamilyhistory").expand(); // Expand the element
+  }
+}); 
+
+
+
+    // Add an event listener to the btnPatientPastHistory button
+$w('#btnOldmedications').onClick(() => {
+  // Toggle the visibility of the iptAddPasthistory field
+ //  $w('#iptOldmedications').value = '';
+  $w('#iptOldmedications').expand();
+      // Set the focus on the iptAllergies input field
+    $w('#iptOldmedications').focus();
+});
+
+    $w('#iptAddOldmedications').onChange((event) => {
+   if (event.target.value) { // Check if a valid option is selected
+  //  $w("#btnOldmedications").collapse(); // Collapse the element
+     $w("#iptOldmedications").collapse(); // Collapse the element
+  } else {
+    $w("#btnOldmedications").expand(); // Expand the element
+  }
+}); 
+
+
+
+  // Add an event listener to the btnPatientPastHistory button
+$w('#btnPresentcomplaints').onClick(() => {
+  // Toggle the visibility of the iptAddPasthistory field
+ //  $w('#iptPresentcomplaints').value = '';
+  $w('#iptPresentcomplaints').expand();
+      // Set the focus on the iptAllergies input field
+    $w('#iptPresentcomplaints').focus();
+});
+$w('#iptAddPresentcomplaints').onChange((event) => {
+  $w('#iptPresentcomplaints').value = $w('#iptAddPresentcomplaints').value;
+  if (event.target.value) { // Check if a valid option is selected
+  //  $w("#btnPresentcomplaints").collapse(); // Collapse the element
+     $w("#iptPresentcomplaints").collapse(); // Collapse the element
+  } else {
+    $w("#btnPresentcomplaints").expand(); // Expand the element
+  }
+});
+
+    // Add an event listener to the btnPatientPastHistory button jivha
+$w('#btnJivha').onClick(() => {
+  // Toggle the visibility of the iptAddPasthistory field
+ //  $w('#iptJivha').value = '';
+  $w('#iptJivha').expand();
+      // Set the focus on the iptAllergies input field
+    $w('#iptJivha').focus();
+});
+$w('#iptAddJivha').onChange((event) => {
+  $w('#iptJivha').value = $w('#iptAddJivha').value;
+  if (event.target.value) { // Check if a valid option is selected
+  //  $w("#btnJivha").collapse(); // Collapse the element
+     $w("#iptJivha").collapse(); // Collapse the element
+  } else {
+    $w("#btnJivha").expand(); // Expand the element
+  }
+});
+
+
+  // Add an event listener to the btnPatientPastHistory button stools
+$w('#btnStools').onClick(() => {
+  // Toggle the visibility of the iptAddPasthistory field
+ //  $w('#iptStools').value = '';
+  $w('#iptStools').expand();
+      // Set the focus on the iptAllergies input field
+    $w('#iptStools').focus();
+});
+/* $w('#iptAddStools').onChange(() => {
+    $w('#iptStools').value = $w('#iptAddStools').value;
+     $w('#iptAddUrine').focus();
+  }); */
+
+$w('#iptAddStools').onChange((event) => {
+  $w('#iptStools').value = $w('#iptAddStools').value;
+  if (event.target.value) { // Check if a valid option is selected
+  //  $w("#btnStools").collapse(); // Collapse the element
+     $w("#iptStools").collapse(); // Collapse the element
+  } else {
+    $w("#btnStools").expand(); // Expand the element
+  }
+});
+
+
+  // Add an event listener to the btnPatientPastHistory button urine
+$w('#btnUrine').onClick(() => {
+  // Toggle the visibility of the iptAddPasthistory field
+ //  $w('#iptUrine').value = '';
+  $w('#iptUrine').expand();
+      // Set the focus on the iptAllergies input field
+    $w('#iptUrine').focus();
+});
+
+/*  $w('#iptAddUrine').onChange(() => {
+    $w('#iptUrine').value = $w('#iptAddUrine').value;
+        $w('#iptAddSweat').focus();
+  }); */
+$w('#iptAddUrine').onChange((event) => {
+  $w('#iptUrine').value = $w('#iptAddUrine').value;
+  if (event.target.value) { // Check if a valid option is selected
+ //   $w("#btnUrine").collapse(); // Collapse the element
+     $w("#iptUrine").collapse(); // Collapse the element
+  } else {
+    $w("#btnUrine").expand(); // Expand the element
+  }
+});
+
+
+
+  // Add an event listener to the btnPatientPastHistory button sweat
+$w('#btnSweat').onClick(() => {
+  // Toggle the visibility of the iptAddPasthistory field
+ //  $w('#iptSweat').value = '';
+  $w('#iptSweat').expand();
+      // Set the focus on the iptAllergies input field
+    $w('#iptSweat').focus();
+});
+
+/* $w('#iptAddSweat').onChange(() => {
+    $w('#iptSweat').value = $w('#iptAddSweat').value;
+        $w('#iptAddApetite').focus();
+  }); */
+
+  $w('#iptAddSweat').onChange((event) => {
+  $w('#iptSweat').value = $w('#iptAddSweat').value;
+  if (event.target.value) { // Check if a valid option is selected
+  //  $w("#btnSweat").collapse(); // Collapse the element
+     $w("#iptSweat").collapse(); // Collapse the element
+  } else {
+    $w("#btnSweat").expand(); // Expand the element
+  }
+});
+
+
+  // Add an event listener to the btnPatientPastHistory button apetite
+$w('#btnApetite').onClick(() => {
+  // Toggle the visibility of the iptAddPasthistory field
+ //  $w('#iptApetite').value = '';
+  $w('#iptApetite').expand();
+      // Set the focus on the iptAllergies input field
+    $w('#iptApetite').focus();
+});
+
+/* $w('#iptAddApetite').onChange(() => {
+    $w('#iptApetite').value = $w('#iptAddApetite').value;
+  }); */
+
+   $w('#iptAddApetite').onChange((event) => {
+  $w('#iptApetite').value = $w('#iptAddApetite').value;
+  if (event.target.value) { // Check if a valid option is selected
+ //   $w("#btnApetite").collapse(); // Collapse the element
+     $w("#iptApetite").collapse(); // Collapse the element
+  } else {
+    $w("#btnApetite").expand(); // Expand the element
+  }
+}); 
+
+
+  // Add an event listener to the btnPatientPastHistory button sleep
+$w('#btnSleep').onClick(() => {
+  // Toggle the visibility of the iptAddPasthistory field
+ //  $w('#iptSleep').value = '';
+  $w('#iptSleep').expand();
+      // Set the focus on the iptAllergies input field
+    $w('#iptSleep').focus();
+});
+/* $w('#iptAddSleep').onChange(() => {
+    $w('#iptSleep').value = $w('#iptAddSleep').value;
+  }); */
+
+     $w('#iptAddSleep').onChange((event) => {
+  $w('#iptSleep').value = $w('#iptAddSleep').value;
+  if (event.target.value) { // Check if a valid option is selected
+ //   $w("#btnSleep").collapse(); // Collapse the element
+     $w("#iptSleep").collapse(); // Collapse the element
+  } else {
+    $w("#btnSleep").expand(); // Expand the element
+  }
+}); 
+
+
+  // Add an event listener to the btnPatientPastHistory button diet
+$w('#btnDietrestrictions').onClick(() => {
+  // Toggle the visibility of the iptAddPasthistory field
+ //  $w('#iptDietrestrictions').value = '';
+  $w('#iptDietrestrictions').expand();
+      // Set the focus on the iptAllergies input field
+    $w('#iptDietrestrictions').focus();
+});
+/* $w('#iptAddDietrestrictions').onChange(() => {
+    $w('#iptDietrestrictions').value = $w('#iptAddDietrestrictions').value;
+  }); */
+
+    $w('#iptAddDietrestrictions').onChange((event) => {
+  $w('#iptDietrestrictions').value = $w('#iptAddDietrestrictions').value;
+  if (event.target.value) { // Check if a valid option is selected
+ //   $w("#btnDietrestrictions").collapse(); // Collapse the element
+     $w("#iptDietrestrictions").collapse(); // Collapse the element
+  } else {
+    $w("#btnDietrestrictions").expand(); // Expand the element
+  }
+}); 
+
+
+
+    // Add an event listener to the btnPatientPastHistory button
+$w('#btnAllergies').onClick(() => {
+  // Toggle the visibility of the iptAddPasthistory field
+//   $w('#iptAllergies').value = '';
+  $w('#iptAllergies').expand();
+     // Set the focus on the iptAllergies input field
+    $w('#iptAllergies').focus();
+});
+
+    $w('#iptAddAllergies').onChange((event) => {
+   if (event.target.value) { // Check if a valid option is selected
+  //  $w("#btnAllergies").collapse(); // Collapse the element
+     $w("#iptAllergies").collapse(); // Collapse the element
+  } else {
+    $w("#btnAllergies").expand(); // Expand the element
+  }
+});
+
+        toggleGroup2();
+    $w('#swtSave').onChange(toggleGroup2);
+    
+     for (let i = 1; i <= 15; i++) {
+        let buttonId = `#btnRefresh${i}`;
+        $w(buttonId).onClick(refreshDatabase);
+    }
+    $w("#swtSave").disable();
+    $w("#loaderGif").show();
+        // Set the initial state of the group based on the switch state
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+    // Update display name input field based on selected medicine for all fields
+   
+    // Set up event handlers for btnTiming1 to btnTiming15
+    setUpEventHandlers();
+$w("#swtSave").enable();
+$w("#loaderGif").hide();
+updateDisplayNameForAllFields();
+
+
+
+
+});
+function attachAddHandler(i) {
+    $w(`#btnAdd${i}`).onClick(() => {
+        $w(`#formMed${i+1}`).expand();
+        $w(`#btnDelete${i}`).disable();
+        $w(`#btnDelete${i+1}`).enable();  // Enable delete button for the new expanded form
+    });
+}
+
+function attachDeleteHandler(i) {
+    $w(`#btnDelete${i}`).onClick(() => {
+        $w(`#formMed${i}`).collapse();
+        $w(`#btnDelete${i-1}`).enable();
+        $w(`#btnDelete${i}`).disable();  // Disable delete button for the collapsed form
+    });
+}
+
+// After
+$w("#btnTest").onClick(() => {
+    handleBtnTestClick();
+});
+$w("#btnRefreshtest").onClick(() => {
+    btnRefreshtest_click();
+});
+
+function toggleGroup2() {
+    if ($w('#swtSave').checked) {
+        $w('#group2').expand();
+    } else {
+        $w('#group2').collapse();
+    }
+}
+
+
+function updateDisplayNameForAllFields() {
+  for (let i = 1; i <= 15; i++) {
+    const iptMedicine = $w(`#iptMedicine${i}`);
+    const iptDosage = $w(`#iptDosage${i}`);
+    const iptFrequency = $w(`#iptFrequency${i}`);
+    const iptTiming = $w(`#iptTiming${i}`);
+    const iptSelectedtiming = $w(`#iptSelectedtiming${i}`);
+    const iptMeal = $w(`#iptMeal${i}`);
+    const iptDuration = $w(`#iptDuration${i}`);
+    const iptNotes = $w(`#iptNotes${i}`);
+    const btnAdd = $w(`#btnAdd${i}`);
+
+    let previousMedicineValue = iptMedicine.value; // Store the initial value of iptMedicine
+
+    const setInitialValues = () => {
+      iptDosage.value = "2 tab(s) ";
+      iptFrequency.value = "twice a day";
+      iptTiming.value = "Afternoon, Night";
+      iptSelectedtiming.value = "Afternoon, Night";
+      iptMeal.value = "after meal";
+      iptDuration.value = "28";
+    };
+
+    iptMedicine.onChange(async () => {
+      let medicine = iptMedicine.value;
+      if (medicine) {
+        const res = await wixData.query('ayurvedicMedicines')
+          .eq('medicineName', medicine)
+          .find();
+
+        let medicineDisplayName = res.items[0].medicineDisplayName;
+        $w(`#iptDisplay${i}`).value = medicineDisplayName;
+
+        if (!previousMedicineValue && medicine) {
+          setInitialValues();
+        }
+        previousMedicineValue = medicine; // update the previous value
+      }
+    });
+  }
+}
+
+updateDisplayNameForAllFields();
+
+
+
+
+
+function handleBtnTestClick() {
+    console.log("Button clicked"); // Log that the button was clicked
+    // Get the current value of iptTests and iptSelectedTest
+    const iptTestsValue = $w("#iptTests").value;
+    const iptSelectedTestValue = $w("#iptSelectedTest").value;
+
+    // Append iptTestsValue to iptSelectedTestValue with a comma separator
+    const updatedValue = iptSelectedTestValue ?
+        `${iptSelectedTestValue}, ${iptTestsValue}` :
+        iptTestsValue;
+
+    // Set the updated value to iptSelectedTest
+    $w("#iptSelectedTest").value = updatedValue;
+}
+
+function setUpEventHandlers() {
+    for (let i = 1; i <= 15; i++) {
+        $w(`#btnTiming${i}`).onClick(() => {
+            appendTimingValue(i);
+        });
+    }
+}
+
+function appendTimingValue(index) {
+    // Get the values from iptTiming and iptSelectedtiming
+    const iptTimingValue = $w(`#iptTiming${index}`).value;
+    const iptSelectedtimingValue = $w(`#iptSelectedtiming${index}`).value;
+
+    // Check if iptSelectedtimingValue is empty, if so, do not add a comma
+    const separator = iptSelectedtimingValue ? ', ' : '';
+
+    // Append the value from iptTiming to iptSelectedtiming with a comma
+    $w(`#iptSelectedtiming${index}`).value = iptSelectedtimingValue + separator + iptTimingValue;
+}
+
+export function btnRefreshtest_click(event) {
+    $w("#dbTests").refresh();
+}
+
+
+
+
+
+
+export async function btnSubmit_click(event) {
+
+    console.log("btnSubmit_click: Start");
+console.log($w("#iptSelectedTest").value);
+    // Get the current item from the dataset
+    const prescriptionDataset = $w("#prescriptionDataset");
+    const currentItem = await prescriptionDataset.getCurrentItem();
+
+    console.log("Current Item:", currentItem);
+
+    if (currentItem) {
+        // Update the fields with the values from the input elements
+        currentItem.patientName = $w("#iptname").value;
+        currentItem.phoneNumber = $w("#iptPhonenumber").value;
+        currentItem.gender = $w("#iptGender").value;
+        currentItem.age = $w("#iptAge").value;
+        currentItem.nadi = $w("#iptNaadi").value;
+        currentItem.city = $w("#iptCity").value;
+        currentItem.pastHistoryOfIllness = $w("#iptPasthistory").value;
+        currentItem.familyHistory = $w("#iptFamilyhistory").value;
+        currentItem.medicationsAllopathy = $w("#iptOldmedications").value;
+        currentItem.allergiesMedicineFood = $w("#iptAllergies").value;
+        currentItem.presentComplaints = $w("#iptPresentcomplaints").value;
+        currentItem.jivhaTongue = $w("#iptJivha").value;
+        currentItem.stools = $w("#iptStools").value;
+        currentItem.urine = $w("#iptUrine").value;
+        currentItem.sweat = $w("#iptSweat").value;
+        currentItem.appetite = $w("#iptApetite").value;
+        currentItem.sleep = $w("#iptSleep").value;
+        currentItem.dietRestrictionsRecommendations = $w("#iptDietrestrictions").value;
+        currentItem.visitDate = $w("#iptVisitdate").value;
+        currentItem.nextVisit = $w("#iptNextvisit").value;
+        currentItem.pendingVisitAmount = $w("#iptPendingvisitamount").value;
+        currentItem.totalCostOfMedicines = $w("#iptCostofmedicine").value;
+        currentItem.pendingMedicineAmount = $w("#iptPendingmedicineamount").value;
+        currentItem.anyOtherRemarks = $w("#iptRemarks").value;
+        currentItem.courierStatus = $w("#iptCourierstatus").value;
+        currentItem.weight = $w("#iptWeight").value;
+        currentItem.bloodPressure = $w("#iptBloodPressure").value;
+        currentItem.selectedTests = $w("#iptSelectedTest").value;
+
+for (let i = 1; i <= 15; i++) {
+    // Check if the form is expanded
+    if (!$w(`#formMed${i}`).collapsed) {
+        currentItem[`medicine${i}`] = $w(`#iptMedicine${i}`).value;
+        currentItem[`displayName${i}`] = $w(`#iptDisplay${i}`).value;
+        currentItem[`dosage${i}`] = $w(`#iptDosage${i}`).value;
+        currentItem[`frequency${i}`] = $w(`#iptFrequency${i}`).value;
+        currentItem[`selectedTimings${i}`] = $w(`#iptSelectedtiming${i}`).value;
+        currentItem[`meal${i}`] = $w(`#iptMeal${i}`).value;
+        currentItem[`duration${i}`] = $w(`#iptDuration${i}`).value;
+        currentItem[`notes${i}`] = $w(`#iptNotes${i}`).value;
+    }
+    else {
+        // If form is collapsed, clear out the fields
+        currentItem[`medicine${i}`] = null;
+        currentItem[`displayName${i}`] = null;
+        currentItem[`dosage${i}`] = null;
+        currentItem[`frequency${i}`] = null;
+        currentItem[`selectedTimings${i}`] = null;
+        currentItem[`meal${i}`] = null;
+        currentItem[`duration${i}`] = null;
+        currentItem[`notes${i}`] = null;
+    }
+}
+
+        // Update displaystate fields
+        for (let i = 1; i <= 15; i++) {
+            currentItem[`displaystate${i}`] = $w(`#switch${i}`).checked;
+        }
+         await prescriptionDataset.setFieldValues(currentItem);
+             await prescriptionDataset.save()
+            .then(() => {
+                // Display a success message or perform any other action upon successful update
+                console.log("Update successful");
+                $w("#txtSuccess").show(); // Show the success text element
+                $w("#txtFailure").hide(); // Hide the failure text element
+            })
+           .catch((err) => {
+    console.error("Error in btnSubmit_click:", err);
+    $w("#txtSuccess").hide(); // Hide the success text element
+    $w("#txtFailure").text = "An error occurred. Please try again. Error details: " + err.message; // Update the failure text element with the error message
+    $w("#txtFailure").show(); // Show the failure text element
+});
+
+    } else {
+        console.log("No item found");
+    }
+
+    console.log("btnSubmit_click: End");
+
+    console.log($w("#iptDisplay1").value);
+    $w('#btnPrint').expand();
+    $w('#htmlGeneratePDF').expand();
+}
+
+export async function btnPrint_click(event) {
+  //  const currentItem = $w("#prescriptionDataset").getCurrentItem();
+  const prescriptionDataset = $w("#prescriptionDataset");
+const currentItem = await prescriptionDataset.getCurrentItem();
+    // Save the dataset before fetching the values
+    // Save the dataset before fetching the values
+    await $w("#prescriptionDataset").save();
+    const displaystates = [];
+
+        // Construct an object with all the currentItem data
+        const data = {
+            patientName: currentItem.patientName,
+            phoneNumber: currentItem.phoneNumber,
+            gender: currentItem.gender,
+            dateOfBirth: currentItem.dateOfBirth,
+            age: currentItem.age,
+            pastHistoryOfIllness: currentItem.pastHistoryOfIllness,
+            familyHistory: currentItem.familyHistory,
+            medicationsAllopathy: currentItem.medicationsAllopathy,
+            allergiesMedicineFood: currentItem.allergiesMedicineFood,
+            visitDate: currentItem.visitDate,
+            presentComplaints: currentItem.presentComplaints,
+            jivhaTongue: currentItem.jivhaTongue,
+            stools: currentItem.stools,
+            urine: currentItem.urine,
+            sweat: currentItem.sweat,
+            apetite: currentItem.apetite,
+            nadi: currentItem.nadi,
+            city: currentItem.city,
+            sleep: currentItem.sleep,
+            dietRestrictionsRecommendations: currentItem.dietRestrictionsRecommendations,
+            displayName1: currentItem.displayName1,
+            dosage1: currentItem.dosage1,
+            frequency1: currentItem.frequency1,
+            selectedTimings1: currentItem.selectedTimings1,
+            meal1: currentItem.meal1,
+            duration1: currentItem.duration1,
+            notes1: currentItem.notes1,
+            medicine1: currentItem.medicine1,
+            nextVisit: currentItem.nextVisit,
+            pendingVisitAmount: currentItem.pendingVisitAmount,
+            totalCostOfMedicines: currentItem.totalCostOfMedicines,
+            pendingMedicineAmount: currentItem.pendingMedicineAmount,
+            anyOtherRemarks: currentItem.anyOtherRemarks,
+            patientId: currentItem.patientId,
+            selectedTests: currentItem.selectedTests, // Add selectedTests to the object
+            courier: currentItem.courierStatus, // Add courier to the object
+
+
+            displaystates: displaystates,
+        };
+
+        for (let i = 1; i <= 15; i++) {
+            displaystates.push(currentItem[`displaystate${i}`]);
+
+        }
+         console.log('displaystates:', displaystates);
+
+    for (let i = 2; i <= 15; i++) {
+        if (currentItem[`medicine${i}`]) {
+            if (!$w(`#formMed${i}`).collapsed) {
+                data[`medicine${i}`] = currentItem[`medicine${i}`];
+                data[`displayName${i}`] = currentItem[`displayName${i}`];
+                data[`dosage${i}`] = currentItem[`dosage${i}`];
+                data[`frequency${i}`] = currentItem[`frequency${i}`];
+                data[`selectedTimings${i}`] = currentItem[`selectedTimings${i}`];
+                data[`meal${i}`] = currentItem[`meal${i}`];
+                data[`duration${i}`] = currentItem[`duration${i}`];
+                data[`notes${i}`] = currentItem[`notes${i}`];
+            }
+        }
+    }
+
+    const encodedInfoText = encodeURIComponent(JSON.stringify(data));
+    const htmlComponentSrc = `https://pathcare94.github.io/csstdoc/index15.html?infoText=${encodedInfoText}`;
+    $w("#htmlGeneratePDF").src = htmlComponentSrc;
+    $w("#htmlGeneratePDF").expand();
+}
+
