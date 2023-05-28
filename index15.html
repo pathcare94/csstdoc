@@ -169,6 +169,14 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
         }
     }
 
+            // Check if the page height is enough for adding new row. If not, add a new page.
+    if (lineHeight + maxRowHeight >= (297 - footerHeight)) {
+        doc.addPage();
+        lineHeight = headerHeight + 5; // reset lineHeight for new page
+        addHeaderAndFooter(); // Add header and footer to the new page
+        drawHeader(); // Draw table header on the new page
+    }
+    
     for (let i = 0; i < rowData.length; i++) {
         drawCell(xPos, lineHeight - 6, columnWidths[i], maxRowHeight);
 
