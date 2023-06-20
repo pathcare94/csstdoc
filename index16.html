@@ -118,24 +118,54 @@ const wrappedText = doc.splitTextToSize(text, maxLineWidth);
         lineHeight += 7;
     }
 
-    addHeaderAndFooter();
-    let lineHeight = headerHeight + 5;
+// Modified code
+addHeaderAndFooter();
+let lineHeight = headerHeight + 5;
 
-    // Add patient details
-    addSectionTitle("Patient Details");
-    addText(`Name: ${data.patientName}`);
-    addText(`Phone Number: ${data.phoneNumber}`);
-    addText(`Gender: ${data.gender}`);
-    addText(`Date of Birth: ${formatDate(data.dateOfBirth)}`);
-    addText(`Age: ${data.age}`);
-    doc.text(`Visit Date: ${formatDate(data.visitDate)}`, 150, lineHeight - (7 * 4));
-    addDivider();
+// Add visit date
+doc.setFontSize(12);
+doc.setFont('helvetica', 'normal');
+doc.text(`Visit Date: ${formatDate(data.visitDate)}`, 150, lineHeight);
+lineHeight += 10;
 
-    // Add visit details
-    addSectionTitle("Visit Details");
-    // No need to print present complaints anymore.
-    //addText(`Present Complaints: ${data.presentComplaints}`);
-    addDivider();
+// Add boxes
+const boxWidth = 30;
+const boxHeight = 10;
+const boxMargin = 5;
+const boxStartX = 105; // Adjust this value to move the grid to the right side of the page
+const boxStartY = lineHeight;
+const boxLabels = [
+    "", "SPH", "CYL", "AXIS", "V/N",
+    "RIGHT", "", "", "", "",
+    "LEFT", "", "", "", "",
+    "ADD", "", "", "", ""
+];
+
+for (let i = 0; i < 20; i++) {
+    const boxX = boxStartX + (i % 5) * (boxWidth + boxMargin);
+    const boxY = boxStartY + Math.floor(i / 5) * (boxHeight + boxMargin);
+    doc.rect(boxX, boxY, boxWidth, boxHeight);
+    doc.text(boxLabels[i], boxX + boxWidth / 2, boxY + boxHeight / 2, { align: "center" });
+}
+
+lineHeight = boxStartY + 4 * (boxHeight + boxMargin);
+
+// Add patient details
+addSectionTitle("Patient Details");
+addText(`Name: ${data.patientName}`);
+addText(`Phone Number: ${data.phoneNumber}`);
+addText(`Gender: ${data.gender}`);
+addText(`Date of Birth: ${formatDate(data.dateOfBirth)}`);
+addText(`Age: ${data.age}`);
+doc.text(`Visit Date: ${formatDate(data.visitDate)}`, 150, lineHeight - (7 * 4));
+addDivider();
+
+// Add visit details
+addSectionTitle("Visit Details");
+// No need to print present complaints anymore.
+//addText(`Present Complaints: ${data.presentComplaints}`);
+addDivider();
+
 
 // Add medicines
 doc.setFont('helvetica', 'normal');
