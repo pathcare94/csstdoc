@@ -129,10 +129,9 @@ doc.text(`Visit Date: ${formatDate(data.visitDate)}`, 150, lineHeight);
 lineHeight += 10;
 
 // Add boxes
-const boxWidth = 30;
+const boxWidth = 20; // Reduced box width to fit all columns on the page
 const boxHeight = 10;
-const boxMargin = 5;
-const boxStartX = 105; // Adjust this value to move the grid to the right side of the page
+const boxStartX = 120; // Adjust this value to move the grid to the right side of the page
 const boxStartY = lineHeight;
 const boxLabels = [
     "", "SPH", "CYL", "AXIS", "V/N",
@@ -142,13 +141,13 @@ const boxLabels = [
 ];
 
 for (let i = 0; i < 20; i++) {
-    const boxX = boxStartX + (i % 5) * (boxWidth + boxMargin);
-    const boxY = boxStartY + Math.floor(i / 5) * (boxHeight + boxMargin);
+    const boxX = boxStartX + (i % 5) * boxWidth;
+    const boxY = boxStartY + Math.floor(i / 5) * boxHeight;
     doc.rect(boxX, boxY, boxWidth, boxHeight);
     doc.text(boxLabels[i], boxX + boxWidth / 2, boxY + boxHeight / 2, { align: "center" });
 }
 
-lineHeight = boxStartY + 4 * (boxHeight + boxMargin);
+lineHeight = headerHeight + 5; // Reset lineHeight to start patient details right below the header
 
 // Add patient details
 addSectionTitle("Patient Details");
