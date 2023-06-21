@@ -137,10 +137,11 @@ const boxStartX = 210 - tableWidth - 20; // Adjust this value to move the grid t
 const boxStartY = lineHeight;
 const boxLabels = [
     "", "SPH", "CYL", "AXIS", "V/N",
-    "RIGHT", rightEyeSphere, rightEyeCylinder, rightEyeAxis, "",
-    "LEFT", leftEyeSphere, leftEyeCylinder, leftEyeAxis, "",
-    "ADD", rightEyeNearAdj, leftEyeNearAdj, "", ""
+    "RIGHT", data.rightEyeSphere, data.rightEyeCylinder, data.rightEyeAxis, "",
+    "LEFT", data.leftEyeSphere, data.leftEyeCylinder, data.leftEyeAxis, "",
+    "ADD", data.rightEyeNearAdj, data.leftEyeNearAdj, "", ""
 ];
+
 
 
 for (let i = 0; i < 20; i++) {
