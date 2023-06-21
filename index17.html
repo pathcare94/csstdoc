@@ -169,11 +169,11 @@ addDivider();
 addSectionTitle("Visit Details");
 // No need to print present complaints anymore.
 //addText(`Present Complaints: ${data.presentComplaints}`);
-
+addDivider();
 
 // New table
 const newTableHeader = ['Diabetes', 'Hypertension', 'His/O TB', 'Blood Thinner', 'Asthama', 'Allergy'];
-const newColumnWidths = Array(6).fill(tableWidth / 6); // Divide the total width by 6 for each column
+const newColumnWidths = [15, 43, 25, 25, 35, 20, 25]; // Same column widths as the medicines table
 
 function drawNewHeader() {
     doc.setFont('helvetica', 'bold');
@@ -202,8 +202,6 @@ for (let i = 0; i < 2; i++) {
 
 // Continue with the rest of the code
 // ...
-
-addDivider();
 
 
 // Add medicines
