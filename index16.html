@@ -129,9 +129,11 @@ doc.text(`Visit Date: ${formatDate(data.visitDate)}`, 150, lineHeight);
 lineHeight += 10;
 
 // Add boxes
-const boxWidth = 20; // Reduced box width to fit all columns on the page
-const boxHeight = 10;
-const boxStartX = 120; // Adjust this value to move the grid to the right side of the page
+const tableWidth = 241.3; // 9.5 inches in mm
+const tableHeight = 76.2; // 3 inches in mm
+const boxWidth = tableWidth / 5;
+const boxHeight = tableHeight / 4;
+const boxStartX = (210 - tableWidth) / 2; // Center the table horizontally on the page
 const boxStartY = lineHeight;
 const boxLabels = [
     "", "SPH", "CYL", "AXIS", "V/N",
@@ -147,7 +149,7 @@ for (let i = 0; i < 20; i++) {
     doc.text(boxLabels[i], boxX + boxWidth / 2, boxY + boxHeight / 2, { align: "center" });
 }
 
-lineHeight = headerHeight + 5; // Reset lineHeight to start patient details right below the header
+lineHeight += tableHeight + 10; // Adjust lineHeight to start patient details below the table
 
 // Add patient details
 addSectionTitle("Patient Details");
@@ -156,7 +158,6 @@ addText(`Phone Number: ${data.phoneNumber}`);
 addText(`Gender: ${data.gender}`);
 addText(`Date of Birth: ${formatDate(data.dateOfBirth)}`);
 addText(`Age: ${data.age}`);
-doc.text(`Visit Date: ${formatDate(data.visitDate)}`, 150, lineHeight - (7 * 4));
 addDivider();
 
 // Add visit details
