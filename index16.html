@@ -146,7 +146,9 @@ for (let i = 0; i < 20; i++) {
     const boxX = boxStartX + (i % 5) * boxWidth;
     const boxY = boxStartY + Math.floor(i / 5) * boxHeight;
     doc.rect(boxX, boxY, boxWidth, boxHeight);
-    doc.text(boxLabels[i], boxX + boxWidth / 2, boxY + boxHeight / 2, { align: "center" });
+    doc.setFont('helvetica', 'bold'); // Set font to bold
+    doc.text(boxLabels[i], boxX + boxWidth / 2, boxY + boxHeight / 2, { align: "center", baseline: "middle" }); // Center align text both horizontally and vertically
+    doc.setFont('helvetica', 'normal'); // Reset font to normal for other elements
 }
 
 lineHeight = headerHeight + 5; // Reset lineHeight to start patient details right below the header
