@@ -173,7 +173,14 @@ addDivider();
 
 // New table
 const newTableHeader = ['Diabetes', 'Hypertension', 'His/O TB', 'Blood Thinner', 'Asthama', 'Allergy'];
-const newColumnWidths = [15, 43, 25, 25, 35, 20, 25]; // Same column widths as the medicines table
+const fontSize = 12; // The font size you are using
+
+// Calculate the width of each heading in mm
+const headerWidths = newTableHeader.map(header => doc.getStringUnitWidth(header) * fontSize * 0.3528);
+
+// Add some padding to each column
+const padding = 2; // 2mm padding on each side
+const newColumnWidths = headerWidths.map(width => width + 2 * padding);
 
 function drawNewHeader() {
     doc.setFont('helvetica', 'bold');
@@ -203,7 +210,7 @@ for (let i = 0; i < 2; i++) {
 // Continue with the rest of the code
 // ...
 
-
+addDivider();
 // Add medicines
 doc.setFont('helvetica', 'normal');
 doc.setLineWidth(0.5);
