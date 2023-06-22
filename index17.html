@@ -217,17 +217,23 @@ function drawAdditionalData() {
     let xPos = 12;
     const additionalData = [data.diabetes, data.bloodPressure];
     for (let i = 0; i < 2; i++) {
-        drawCell(xPos, lineHeight - 6, newColumnWidths[i], 10);
-        doc.setFontSize(12); // Use the same font size as the rest of the document
-
         // Wrap text if it doesn't fit in the cell
         const cellText = doc.splitTextToSize(additionalData[i], newColumnWidths[i] - 4);
-        doc.text(cellText, xPos + 2, lineHeight + 2);
+        const cellHeight = cellText.length * 7;
+
+        drawCell(xPos, lineHeight - 6, newColumnWidths[i], cellHeight);
+        doc.setFontSize(12); // Use the same font size as the rest of the document
+
+        // Calculate vertical position for center alignment
+        const verticalPos = lineHeight - 6 + (cellHeight / 2);
+        doc.text(cellText, xPos + newColumnWidths[i] / 2, verticalPos, { align: "center", baseline: "middle" });
+
         xPos += newColumnWidths[i];
     }
-    lineHeight += 10;
+    lineHeight += Math.max(...additionalData.map(text => doc.splitTextToSize(text, newColumnWidths[i] - 4).length * 7));
     doc.setFont('helvetica', 'normal');
 }
+
 
 
 drawNewHeader();
