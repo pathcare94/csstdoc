@@ -230,14 +230,6 @@ drawNewHeader();
 drawNewData();
 drawAdditionalData();
 
-// Add one empty row
-let xPos = 12;
-for (let j = 0; j < newTableHeader.length; j++) {
-    drawCell(xPos, lineHeight - 6, newColumnWidths[j], 10);
-    xPos += newColumnWidths[j];
-}
-lineHeight += 10;
-
 
 // Continue with the rest of the code
 // ...
