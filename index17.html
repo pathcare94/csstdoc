@@ -203,7 +203,7 @@ function drawNewData() {
         drawCell(xPos, lineHeight - 6, newColumnWidths[i], 10);
         doc.setFontSize(12); // Use the same font size as the rest of the document
         // Check if the condition is met
-        if (data.chckPasthistoryofPatient[i] === 'Yes') {
+        if (data.chckPasthistoryofPatient.includes(newTableHeader[i])) {
             doc.text('X', xPos + newColumnWidths[i] / 2, lineHeight + 2, { align: "center" });
         }
         xPos += newColumnWidths[i];
@@ -211,6 +211,7 @@ function drawNewData() {
     lineHeight += 10;
     doc.setFont('helvetica', 'normal');
 }
+
 
 drawNewHeader();
 drawNewData();
