@@ -204,7 +204,7 @@ function drawNewData() {
         doc.setFontSize(12); // Use the same font size as the rest of the document
         // Check if the condition is met
         if (data.chckPasthistoryofPatient.includes(newTableHeader[i])) {
-            doc.text('✓', xPos + newColumnWidths[i] / 2, lineHeight + 2, { align: "center" });
+            doc.text('X', xPos + newColumnWidths[i] / 2, lineHeight + 2, { align: "center" });
         }
         xPos += newColumnWidths[i];
     }
