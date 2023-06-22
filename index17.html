@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -173,7 +174,7 @@ addDivider();
 
 // New table
 const newTableHeader = ['Diabetes', 'Hypertension', 'His/O TB', 'Blood Thinners', 'H/O Heart Disease', 'Asthama', 'Allergy'];
-
+const fontSize = 12; // The font size you are using
 
 // Calculate the width of each heading in mm
 const headerWidths = newTableHeader.map(header => doc.getStringUnitWidth(header) * fontSize * 0.3528);
