@@ -212,20 +212,32 @@ function drawNewData() {
     doc.setFont('helvetica', 'normal');
 }
 
+// Draw additional data
+function drawAdditionalData() {
+    let xPos = 12;
+    const additionalData = [data.bloodPressure, data.diabetes];
+    for (let i = 0; i < 2; i++) {
+        drawCell(xPos, lineHeight - 6, newColumnWidths[i], 10);
+        doc.setFontSize(12); // Use the same font size as the rest of the document
+        doc.text(additionalData[i], xPos + newColumnWidths[i] / 2, lineHeight + 2, { align: "center" });
+        xPos += newColumnWidths[i];
+    }
+    lineHeight += 10;
+    doc.setFont('helvetica', 'normal');
+}
 
 drawNewHeader();
 drawNewData();
+drawAdditionalData();
 
-
-// Add two empty rows
-for (let i = 0; i < 2; i++) {
-    let xPos = 12;
-    for (let j = 0; j < newTableHeader.length; j++) {
-        drawCell(xPos, lineHeight - 6, newColumnWidths[j], 10);
-        xPos += newColumnWidths[j];
-    }
-    lineHeight += 10;
+// Add one empty row
+let xPos = 12;
+for (let j = 0; j < newTableHeader.length; j++) {
+    drawCell(xPos, lineHeight - 6, newColumnWidths[j], 10);
+    xPos += newColumnWidths[j];
 }
+lineHeight += 10;
+
 
 // Continue with the rest of the code
 // ...
