@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -183,6 +182,20 @@ const headerWidths = newTableHeader.map(header => doc.getStringUnitWidth(header)
 const padding = 2; // 2mm padding on each side
 const newColumnWidths = headerWidths.map(width => width + 2 * padding);
 
+// Draw new table header
+function drawNewHeader() {
+    doc.setFont('helvetica', 'bold');
+    let xPos = 12;
+    for (let i = 0; i < newTableHeader.length; i++) {
+        drawCell(xPos, lineHeight - 6, newColumnWidths[i], 10);
+        doc.setFontSize(12); // Use the same font size as the rest of the document
+        doc.text(newTableHeader[i], xPos + 2, lineHeight + 2);
+        xPos += newColumnWidths[i];
+    }
+    lineHeight += 10;
+    doc.setFont('helvetica', 'normal');
+}
+
 // Draw new table data
 function drawNewData() {
     let xPos = 12;
@@ -198,6 +211,7 @@ function drawNewData() {
     lineHeight += 10;
     doc.setFont('helvetica', 'normal');
 }
+
 
 drawNewHeader();
 drawNewData();
