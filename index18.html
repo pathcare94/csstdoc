@@ -273,29 +273,38 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
     let xPos = 12;
     const rowData = [serial, medicineName, dosage, frequency, timings, meal, `${duration} days`];
 
-    let maxRowHeight = 6; // Adjusted row height
+    // Calculate row height and max text height based on text split into lines.
+    let maxRowHeight = 6;
+    let maxTextHeight = 0;
     for (let i = 0; i < rowData.length; i++) {
-        const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 2); // Adjusted padding
-        const cellHeight = cellText.length * 4; // Adjusted row height
+        const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 2);
+        const cellHeight = cellText.length * 4; // 4 is a rough estimate of line height, you might need to adjust it
         if (cellHeight > maxRowHeight) {
             maxRowHeight = cellHeight;
         }
+        if (cellText.length > maxTextHeight) {
+            maxTextHeight = cellText.length;
+        }
+    }
+    lineHeight += maxRowHeight;
+    
+    if (lineHeight > doc.internal.pageSize.height - 10) {
+        doc.addPage();
+        lineHeight = 16;
     }
 
-    if (lineHeight + maxRowHeight >= (297 - footerHeight)) {
-        doc.addPage();
-        lineHeight = headerHeight + 5; 
-        addHeaderAndFooter(); 
-        drawHeader();
-    }
-    
+    // Draw the cells and text
     for (let i = 0; i < rowData.length; i++) {
-        drawCell(xPos, lineHeight - 4, columnWidths[i], maxRowHeight); // Adjusted padding
-        const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 2); // Adjusted padding
-        doc.setFontSize(9); // Reduced font size
-        doc.text(cellText, xPos + 1, lineHeight + 1); // Adjusted padding
+        drawCell(xPos, lineHeight - maxRowHeight, columnWidths[i], maxRowHeight);
+        const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 2);
+        doc.setFontSize(9);
+        const textHeight = cellText.length * 4;
+        const textTop = lineHeight - maxRowHeight + (maxRowHeight - textHeight) / 2; // this line
+        doc.text(cellText, xPos + 1, textTop); // this line
         xPos += columnWidths[i];
     }
+}
+
     lineHeight += maxRowHeight;
 
     if (notes && notes.trim() !== "") {
