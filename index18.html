@@ -273,14 +273,15 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
     let xPos = 12;
     const rowData = [serial, medicineName, dosage, frequency, timings, meal, `${duration} days`];
 
-    let maxRowHeight = 6; // Adjusted row height
-    for (let i = 0; i < rowData.length; i++) {
-        const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 2); // Adjusted padding
-        const cellHeight = cellText.length * 4; // Adjusted row height
+    let maxRowHeight = 6;
+    const cellTexts = rowData.map((data, i) => {
+        const cellText = doc.splitTextToSize(data.toString(), columnWidths[i] - 2);
+        const cellHeight = cellText.length * 4;
         if (cellHeight > maxRowHeight) {
             maxRowHeight = cellHeight;
         }
-    }
+        return cellText;
+    });
 
     if (lineHeight + maxRowHeight >= (297 - footerHeight)) {
         doc.addPage();
@@ -289,22 +290,21 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
         drawHeader();
     }
     
-    for (let i = 0; i < rowData.length; i++) {
-        drawCell(xPos, lineHeight - 4, columnWidths[i], maxRowHeight); // Adjusted padding
-        const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 2); // Adjusted padding
-        doc.setFontSize(9); // Reduced font size
-        doc.text(cellText, xPos + 1, lineHeight + 1); // Adjusted padding
+    for (let i = 0; i < cellTexts.length; i++) {
+        drawCell(xPos, lineHeight - 4, columnWidths[i], maxRowHeight);
+        doc.setFontSize(9);
+        doc.text(cellTexts[i], xPos + 1, lineHeight + 1);
         xPos += columnWidths[i];
     }
     lineHeight += maxRowHeight;
 
     if (notes && notes.trim() !== "") {
         const notesText = `Notes: ${notes}`;
-        const notesBoxWidth = 141; // Reduced width
-        const wrappedNotesText = doc.splitTextToSize(notesText, notesBoxWidth - 2); // Adjusted padding
-        const notesHeight = wrappedNotesText.length * 4; // Adjusted height
-        doc.rect(12, lineHeight - 4, notesBoxWidth, notesHeight); // Adjusted padding
-        doc.text(wrappedNotesText, 14, lineHeight - 4 + 3); // Adjusted padding
+        const notesBoxWidth = 141;
+        const wrappedNotesText = doc.splitTextToSize(notesText, notesBoxWidth - 2);
+        const notesHeight = wrappedNotesText.length * 4;
+        doc.rect(12, lineHeight - 4, notesBoxWidth, notesHeight);
+        doc.text(wrappedNotesText, 14, lineHeight - 4 + 3);
         lineHeight += notesHeight;
     }
 }
