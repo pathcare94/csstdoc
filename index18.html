@@ -276,7 +276,7 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
     // Calculate the height of each cell based on the number of lines in the text
     const cellHeights = rowData.map((data, i) => {
         const cellText = doc.splitTextToSize(data.toString(), columnWidths[i] - 2);
-        return cellText.length * 4;
+        return cellText.length * 4; // Adjust this multiplication factor if needed. This will change the height of your rows.
     });
 
     // Find the maximum height among all cells
@@ -294,7 +294,7 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
         const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 2);
         drawCell(xPos, lineHeight - 4, columnWidths[i], maxRowHeight);
         doc.setFontSize(9);
-        doc.text(cellText, xPos + 1, lineHeight + 1);
+        doc.text(cellText, xPos + 1, lineHeight + 1); // This will wrap the text inside the cell
         xPos += columnWidths[i];
     }
     lineHeight += maxRowHeight;
