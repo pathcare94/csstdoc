@@ -290,7 +290,7 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
         drawCell(xPos, lineHeight, columnWidths[i], rowHeight);
         doc.setFontSize(9);
         // adjust the position to vertically center the text
-        doc.text(cellText, xPos + 2, lineHeight + ((rowHeight - cellText.length * 4) / 2) + (cellText.length * 4 / 2));
+        doc.text(cellText, xPos + 2, lineHeight + ((rowHeight - cellText.length * 4) / 4) + (cellText.length * 4 / 2));
         xPos += columnWidths[i];
     }
     lineHeight += rowHeight;
