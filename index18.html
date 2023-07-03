@@ -273,36 +273,38 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
     let xPos = 12;
     const rowData = [serial, medicineName, dosage, frequency, timings, meal, `${duration} days`];
 
-    let maxRowHeight = 10;
+    let minRowHeight = 10;
+    let maxRowHeight = minRowHeight;
     for (let i = 0; i < rowData.length; i++) {
-        const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 2);
-        const cellHeight = cellText.length * 7;
+        const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 4);
+        const cellHeight = cellText.length * 4 + 2;
         if (cellHeight > maxRowHeight) {
             maxRowHeight = cellHeight;
         }
     }
 
-    let textBaselineOffset = 2;
+    const rowHeight = maxRowHeight;
 
     for (let i = 0; i < rowData.length; i++) {
-        const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 2);
-        drawCell(xPos, lineHeight, columnWidths[i], maxRowHeight);
+        const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 4);
+        drawCell(xPos, lineHeight, columnWidths[i], rowHeight);
         doc.setFontSize(9);
-        doc.text(cellText, xPos + 1, lineHeight + 1 + textBaselineOffset);
+        doc.text(cellText, xPos + 2, lineHeight + ((rowHeight - cellText.length * 4) / 2) + 2);
         xPos += columnWidths[i];
     }
-    lineHeight += maxRowHeight;
+    lineHeight += rowHeight;
 
     if (notes && notes.trim() !== "") {
         const notesText = `Notes: ${notes}`;
         const notesBoxWidth = 141;
-        const wrappedNotesText = doc.splitTextToSize(notesText, notesBoxWidth - 2);
-        const notesHeight = wrappedNotesText.length * 7;
+        const wrappedNotesText = doc.splitTextToSize(notesText, notesBoxWidth - 4);
+        const notesHeight = wrappedNotesText.length * 4 + 2;
         doc.rect(12, lineHeight, notesBoxWidth, notesHeight);
-        doc.text(wrappedNotesText, 14, lineHeight + 1 + textBaselineOffset);
+        doc.text(wrappedNotesText, 14, lineHeight + 2);
         lineHeight += notesHeight;
     }
 }
+
 
 
 function drawCell(x, y, width, height) {
