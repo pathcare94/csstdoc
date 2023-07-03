@@ -277,7 +277,7 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
     let maxRowHeight = minRowHeight;
     for (let i = 0; i < rowData.length; i++) {
         const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 4);
-        const cellHeight = cellText.length * 4 + 2;
+        const cellHeight = cellText.length * 4 + 4; // increased padding by adding 4 instead of 2
         if (cellHeight > maxRowHeight) {
             maxRowHeight = cellHeight;
         }
@@ -289,7 +289,8 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
         const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 4);
         drawCell(xPos, lineHeight, columnWidths[i], rowHeight);
         doc.setFontSize(9);
-        doc.text(cellText, xPos + 2, lineHeight + ((rowHeight - cellText.length * 4) / 2) + 2);
+        // adjust the position to vertically center the text
+        doc.text(cellText, xPos + 2, lineHeight + ((rowHeight - cellText.length * 4) / 2) + (cellText.length * 4 / 2));
         xPos += columnWidths[i];
     }
     lineHeight += rowHeight;
@@ -298,12 +299,13 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
         const notesText = `Notes: ${notes}`;
         const notesBoxWidth = 141;
         const wrappedNotesText = doc.splitTextToSize(notesText, notesBoxWidth - 4);
-        const notesHeight = wrappedNotesText.length * 4 + 2;
+        const notesHeight = wrappedNotesText.length * 4 + 4; // increased padding by adding 4 instead of 2
         doc.rect(12, lineHeight, notesBoxWidth, notesHeight);
-        doc.text(wrappedNotesText, 14, lineHeight + 2);
+        doc.text(wrappedNotesText, 14, lineHeight + 2 + wrappedNotesText.length * 2); // vertically center the text
         lineHeight += notesHeight;
     }
 }
+
 
 
 
