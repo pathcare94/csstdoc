@@ -273,16 +273,16 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
     let xPos = 12;
     const rowData = [serial, medicineName, dosage, frequency, timings, meal, `${duration} days`];
 
-    let maxRowHeight = 6;
-    const cellTexts = rowData.map((data, i) => {
+    // Calculate the height of each cell based on the number of lines in the text
+    const cellHeights = rowData.map((data, i) => {
         const cellText = doc.splitTextToSize(data.toString(), columnWidths[i] - 2);
-        const cellHeight = cellText.length * 4;
-        if (cellHeight > maxRowHeight) {
-            maxRowHeight = cellHeight;
-        }
-        return cellText;
+        return cellText.length * 4;
     });
 
+    // Find the maximum height among all cells
+    let maxRowHeight = Math.max(...cellHeights);
+
+    // Check if adding a new row with this height would cause the current page to overflow
     if (lineHeight + maxRowHeight >= (297 - footerHeight)) {
         doc.addPage();
         lineHeight = headerHeight + 5; 
@@ -290,10 +290,11 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
         drawHeader();
     }
     
-    for (let i = 0; i < cellTexts.length; i++) {
+    for (let i = 0; i < rowData.length; i++) {
+        const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 2);
         drawCell(xPos, lineHeight - 4, columnWidths[i], maxRowHeight);
         doc.setFontSize(9);
-        doc.text(cellTexts[i], xPos + 1, lineHeight + 1);
+        doc.text(cellText, xPos + 1, lineHeight + 1);
         xPos += columnWidths[i];
     }
     lineHeight += maxRowHeight;
@@ -308,6 +309,7 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
         lineHeight += notesHeight;
     }
 }
+
 
 
 
