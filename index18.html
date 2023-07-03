@@ -290,24 +290,27 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
         drawHeader();
     }
     
-    for (let i = 0; i < rowData.length; i++) {
-        const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 2);
-        drawCell(xPos, lineHeight - 4, columnWidths[i], maxRowHeight);
-        doc.setFontSize(9);
-        doc.text(cellText, xPos + 1, lineHeight + 1); // This will wrap the text inside the cell
-        xPos += columnWidths[i];
-    }
+// Calculate text baseline offset
+let textBaselineOffset = 2;  // You may adjust this value to better fit your needs
+
+for (let i = 0; i < rowData.length; i++) {
+    const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 2);
+    drawCell(xPos, lineHeight - 4, columnWidths[i], maxRowHeight);
+    doc.setFontSize(9);
+    doc.text(cellText, xPos + 1, lineHeight + 1 + textBaselineOffset); 
+    xPos += columnWidths[i];
+}
     lineHeight += maxRowHeight;
 
-    if (notes && notes.trim() !== "") {
-        const notesText = `Notes: ${notes}`;
-        const notesBoxWidth = 141;
-        const wrappedNotesText = doc.splitTextToSize(notesText, notesBoxWidth - 2);
-        const notesHeight = wrappedNotesText.length * 4;
-        doc.rect(12, lineHeight - 4, notesBoxWidth, notesHeight);
-        doc.text(wrappedNotesText, 14, lineHeight - 4 + 3);
-        lineHeight += notesHeight;
-    }
+if (notes && notes.trim() !== "") {
+    const notesText = `Notes: ${notes}`;
+    const notesBoxWidth = 141;
+    const wrappedNotesText = doc.splitTextToSize(notesText, notesBoxWidth - 2);
+    const notesHeight = wrappedNotesText.length * 4;
+    doc.rect(12, lineHeight - 4, notesBoxWidth, notesHeight);
+    doc.text(wrappedNotesText, 14, lineHeight - 4 + 3 + textBaselineOffset);
+    lineHeight += notesHeight;
+}
 }
 
 
