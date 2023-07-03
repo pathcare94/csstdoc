@@ -275,13 +275,13 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
 
     const rowHeight = 10; // Set a constant row height
 
-    let textBaselineOffset = 2; 
-
     for (let i = 0; i < rowData.length; i++) {
         const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 2);
         drawCell(xPos, lineHeight, columnWidths[i], rowHeight);
         doc.setFontSize(9);
-        doc.text(cellText, xPos + 1, lineHeight + 1 + textBaselineOffset); 
+        const textX = xPos + (columnWidths[i] / 2) - (doc.getStringUnitWidth(cellText) * doc.internal.getFontSize() / 2);
+        const textY = lineHeight + (rowHeight / 2);
+        doc.text(cellText, textX, textY);
         xPos += columnWidths[i];
     }
     lineHeight += rowHeight;
@@ -291,7 +291,9 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
         const notesBoxWidth = 141;
         const wrappedNotesText = doc.splitTextToSize(notesText, notesBoxWidth - 2);
         doc.rect(12, lineHeight, notesBoxWidth, rowHeight);
-        doc.text(wrappedNotesText, 14, lineHeight + 1 + textBaselineOffset);
+        const textX = 12 + (notesBoxWidth / 2) - (doc.getStringUnitWidth(wrappedNotesText) * doc.internal.getFontSize() / 2);
+        const textY = lineHeight + (rowHeight / 2);
+        doc.text(wrappedNotesText, textX, textY);
         lineHeight += rowHeight;
     }
 }
