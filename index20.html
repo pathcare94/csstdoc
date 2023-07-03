@@ -252,63 +252,67 @@ doc.setFont('helvetica', 'normal');
 doc.setLineWidth(0.5);
 
 const tableHeader = ['S.No', 'Medicine', 'Dosage', 'Frequency', 'Timings', 'Meal', 'Duration'];
-const columnWidths = [11.25, 32.25, 18.75, 18.75, 26.25, 15, 18.75]; // Reduced by 25%
-
+const columnWidths = [15, 43, 25, 25, 35, 20, 25];
 
 function drawHeader() {
     doc.setFont('helvetica', 'bold');
     let xPos = 12;
     for (let i = 0; i < tableHeader.length; i++) {
-        drawCell(xPos, lineHeight - 4, columnWidths[i], 6); // Reduced cell height
-        doc.setFontSize(9); // Reduced font size
-        doc.text(tableHeader[i], xPos + 1, lineHeight + 1); // Adjusted padding
+        drawCell(xPos, lineHeight - 6, columnWidths[i], 10);
+        doc.setFontSize(12); // Use the same font size as the rest of the document
+        doc.text(tableHeader[i], xPos + 2, lineHeight + 2);
         xPos += columnWidths[i];
     }
-    lineHeight += 6; // Adjusted row height
+    lineHeight += 10;
     doc.setFont('helvetica', 'normal');
 }
-
 
 function drawRow(serial, medicineName, dosage, frequency, timings, meal, duration, notes) {
     let xPos = 12;
     const rowData = [serial, medicineName, dosage, frequency, timings, meal, `${duration} days`];
 
-    let maxRowHeight = 6;
-    const cellTexts = rowData.map((data, i) => {
-        const cellText = doc.splitTextToSize(data.toString(), columnWidths[i] - 2);
-        const cellHeight = cellText.length * 4;
+    let maxRowHeight = 10;
+    for (let i = 0; i < rowData.length; i++) {
+        const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 4);
+        const cellHeight = cellText.length * 7;
         if (cellHeight > maxRowHeight) {
             maxRowHeight = cellHeight;
         }
-        return cellText;
-    });
+    }
 
+            // Check if the page height is enough for adding new row. If not, add a new page.
     if (lineHeight + maxRowHeight >= (297 - footerHeight)) {
         doc.addPage();
-        lineHeight = headerHeight + 5; 
-        addHeaderAndFooter(); 
-        drawHeader();
+        lineHeight = headerHeight + 5; // reset lineHeight for new page
+        addHeaderAndFooter(); // Add header and footer to the new page
+        drawHeader(); // Draw table header on the new page
     }
     
-    for (let i = 0; i < cellTexts.length; i++) {
-        drawCell(xPos, lineHeight - 4, columnWidths[i], maxRowHeight);
-        doc.setFontSize(9);
-        doc.text(cellTexts[i], xPos + 1, lineHeight + 1);
+    for (let i = 0; i < rowData.length; i++) {
+        drawCell(xPos, lineHeight - 6, columnWidths[i], maxRowHeight);
+
+        // Wrap text if it doesn't fit in the cell
+        const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 4);
+        doc.setFontSize(12); // Use the same font size as the rest of the document
+        doc.text(cellText, xPos + 2, lineHeight + 2);
         xPos += columnWidths[i];
     }
     lineHeight += maxRowHeight;
 
+    // Add additional notes row if notes are present
     if (notes && notes.trim() !== "") {
         const notesText = `Notes: ${notes}`;
-        const notesBoxWidth = 141;
-        const wrappedNotesText = doc.splitTextToSize(notesText, notesBoxWidth - 2);
-        const notesHeight = wrappedNotesText.length * 4;
-        doc.rect(12, lineHeight - 4, notesBoxWidth, notesHeight);
-        doc.text(wrappedNotesText, 14, lineHeight - 4 + 3);
+        const notesBoxWidth = 188;
+        const wrappedNotesText = doc.splitTextToSize(notesText, notesBoxWidth - 4);
+        const notesHeight = wrappedNotesText.length * 7;
+
+        // Merge all the cells in the row for notes
+        doc.rect(12, lineHeight - 6, notesBoxWidth, notesHeight);
+        doc.text(wrappedNotesText, 14, lineHeight - 6 + 5); // Adjust the vertical position of the notes text
+
         lineHeight += notesHeight;
     }
 }
-
 
 
 
