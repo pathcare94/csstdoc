@@ -280,7 +280,7 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
         }
     }
 
-            // Check if the page height is enough for adding new row. If not, add a new page.
+    // Check if the page height is enough for adding new row. If not, add a new page.
     if (lineHeight + maxRowHeight >= (297 - footerHeight)) {
         doc.addPage();
         lineHeight = headerHeight + 5; // reset lineHeight for new page
@@ -306,7 +306,7 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
         const wrappedNotesText = doc.splitTextToSize(notesText, notesBoxWidth - 4);
         const notesHeight = wrappedNotesText.length * 7;
 
-        // Merge all the cells in the row for notes
+   // Merge all the cells in the row for notes
         doc.rect(12, lineHeight - 6, notesBoxWidth, notesHeight);
         doc.text(wrappedNotesText, 14, lineHeight - 6 + 5); // Adjust the vertical position of the notes text
 
@@ -314,8 +314,7 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
     }
 }
 
-
-
+        
 
 function drawCell(x, y, width, height) {
     doc.rect(x, y, width, height);
