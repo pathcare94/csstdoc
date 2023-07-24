@@ -259,7 +259,7 @@ function drawHeader() {
     let xPos = 12;
     for (let i = 0; i < tableHeader.length; i++) {
         drawCell(xPos, lineHeight - 6, columnWidths[i], 10);
-        doc.setFontSize(12); // Use the same font size as the rest of the document
+        doc.setFontSize(7.8); // Use the same font size as the rest of the document
         doc.text(tableHeader[i], xPos + 2, lineHeight + 2);
         xPos += columnWidths[i];
     }
