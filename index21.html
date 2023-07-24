@@ -260,7 +260,7 @@ function drawHeader() {
     for (let i = 0; i < tableHeader.length; i++) {
         drawCell(xPos, lineHeight - 6, columnWidths[i], 10);
         doc.setFontSize(7.8); // Use the same font size as the rest of the document
-        doc.text(tableHeader[i], xPos + (2 * 0.65), lineHeight + (2 * 0.65));
+        doc.text(tableHeader[i], xPos + (2 * 0.40), lineHeight + (2 * 0.40));
         xPos += columnWidths[i];
     }
     lineHeight += 10;
@@ -294,7 +294,7 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
         // Wrap text if it doesn't fit in the cell
         const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 4);
         doc.setFontSize(7.8); // Use the same font size as the rest of the document
-        doc.text(cellText, xPos + (2 * 0.65), lineHeight + (2 * 0.65));
+        doc.text(cellText, xPos + (2 * 0.40), lineHeight + (2 * 0.40));
         xPos += columnWidths[i];
     }
     lineHeight += maxRowHeight;
