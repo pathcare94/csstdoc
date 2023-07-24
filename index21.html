@@ -183,18 +183,19 @@ const padding = 2; // 2mm padding on each side
 const newColumnWidths = headerWidths.map(width => width + 2 * padding);
 
 // Draw new table header
-function drawNewHeader() {
+function drawHeader() {
     doc.setFont('helvetica', 'bold');
     let xPos = 12;
-    for (let i = 0; i < newTableHeader.length; i++) {
-        drawCell(xPos, lineHeight - 6, newColumnWidths[i], 10);
-        doc.setFontSize(12); // Use the same font size as the rest of the document
-        doc.text(newTableHeader[i], xPos + 2, lineHeight + 2);
-        xPos += newColumnWidths[i];
+    for (let i = 0; i < tableHeader.length; i++) {
+        drawCell(xPos, lineHeight - 6, columnWidths[i], 10);
+        doc.setFontSize(7.8); // Use the same font size as the rest of the document
+        doc.text(tableHeader[i], xPos + columnWidths[i] / 2, lineHeight + (0.25), { align: 'center' });
+        xPos += columnWidths[i];
     }
     lineHeight += 10;
     doc.setFont('helvetica', 'normal');
 }
+
 
 // Draw new table data
 function drawNewData() {
@@ -287,14 +288,14 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
         addHeaderAndFooter(); // Add header and footer to the new page
         drawHeader(); // Draw table header on the new page
     }
-    
+
     for (let i = 0; i < rowData.length; i++) {
         drawCell(xPos, lineHeight - 6, columnWidths[i], maxRowHeight);
 
         // Wrap text if it doesn't fit in the cell
         const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 4);
         doc.setFontSize(7.8); // Use the same font size as the rest of the document
-        doc.text(cellText, xPos + (0.25), lineHeight + (0.25));
+        doc.text(cellText, xPos + columnWidths[i] / 2, lineHeight + (0.25), { align: 'center', baseline: 'middle' });
         xPos += columnWidths[i];
     }
     lineHeight += maxRowHeight;
@@ -306,13 +307,14 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
         const wrappedNotesText = doc.splitTextToSize(notesText, notesBoxWidth - 4);
         const notesHeight = wrappedNotesText.length * 7;
 
-   // Merge all the cells in the row for notes
+        // Merge all the cells in the row for notes
         doc.rect(12, lineHeight - 6, notesBoxWidth, notesHeight);
         doc.text(wrappedNotesText, 14, lineHeight - 6 + 5); // Adjust the vertical position of the notes text
 
         lineHeight += notesHeight;
     }
 }
+
 
         
 
