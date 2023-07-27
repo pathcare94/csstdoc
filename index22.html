@@ -171,52 +171,44 @@ addSectionTitle("Visit Details");
 //addText(`Present Complaints: ${data.presentComplaints}`);
 addDivider();
 
-// New table
-const newTableHeader = ['Diabetes', 'Hypertension', 'H/O TB', 'Blood Thinners', 'H/O Heart Disease', 'Asthama', 'Allergy'];
-const fontSize = 12; // The font size you are using
-
-// Calculate the width of each heading in mm
-const headerWidths = newTableHeader.map(header => doc.getStringUnitWidth(header) * fontSize * 0.3528);
-
-// Add some padding to each column
-const padding = 2; // 2mm padding on each side
-const newColumnWidths = headerWidths.map(width => width + 2 * padding);
-
 // Draw new table header
 function drawNewHeader() {
+    let newTableStartX = boxStartX + tableWidth + 20; // Add 20mm gap between tables
     doc.setFont('helvetica', 'bold');
-    let yPos = boxStartY; // change from 50 to boxStartY to align with the other table
-    drawCell(120, yPos, 50, 10); // move table to the right by setting x position to 120
-    doc.text("Header", 122, yPos + 7);
+    let yPos = boxStartY; 
+    drawCell(newTableStartX, yPos, 50, 10);
+    doc.text("Header", newTableStartX + 2, yPos + 7);
     doc.setFont('helvetica', 'normal');
 }
 
 // Draw new table data
 function drawNewData() {
-    let yPos = boxStartY + 10; // align with the other table
+    let newTableStartX = boxStartX + tableWidth + 20; // Add 20mm gap between tables
+    let yPos = boxStartY + 10; 
     for (let i = 0; i < newTableHeader.length; i++) {
-        drawCell(120, yPos, 50, 10); // move table to the right by setting x position to 120
-        doc.setFontSize(12); // Use the same font size as the rest of the document
-        doc.text(newTableHeader[i], 122, yPos + 7);
+        drawCell(newTableStartX, yPos, 50, 10);
+        doc.setFontSize(12); 
+        doc.text(newTableHeader[i], newTableStartX + 2, yPos + 7);
 
         // Check if the condition is met
         if (data.chckPasthistoryofPatient.includes(newTableHeader[i])) {
-            drawCell(170, yPos, 50, 10); // move table to the right by setting x position to 170
-            doc.text('X', 172, yPos + 7);
+            drawCell(newTableStartX + 50, yPos, 50, 10);
+            doc.text('X', newTableStartX + 52, yPos + 7);
         } else {
-            drawCell(170, yPos, 50, 10); // move table to the right by setting x position to 170
+            drawCell(newTableStartX + 50, yPos, 50, 10);
         }
         yPos += 10;
     }
 }
 
 function drawAdditionalData() {
-    let yPos = boxStartY + 10; // align with the other table
+    let newTableStartX = boxStartX + tableWidth + 20; // Add 20mm gap between tables
+    let yPos = boxStartY + 10; 
     const additionalData = [data.diabetes, data.bloodPressure];
     for (let i = 0; i < 2; i++) {
-        drawCell(220, yPos, 50, 10);
-        doc.setFontSize(12); // Use the same font size as the rest of the document
-        doc.text(additionalData[i], 222, yPos + 7);
+        drawCell(newTableStartX + 100, yPos, 50, 10);
+        doc.setFontSize(12); 
+        doc.text(additionalData[i], newTableStartX + 102, yPos + 7);
         yPos += 10;
     }
 }
