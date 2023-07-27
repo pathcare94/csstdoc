@@ -185,38 +185,38 @@ const newColumnWidths = headerWidths.map(width => width + 2 * padding);
 // Draw new table header
 function drawNewHeader() {
     doc.setFont('helvetica', 'bold');
-    let yPos = 50;
-    drawCell(20, yPos, 50, 10);
-    doc.text("Header", 22, yPos + 7);
+    let yPos = boxStartY; // change from 50 to boxStartY to align with the other table
+    drawCell(120, yPos, 50, 10); // move table to the right by setting x position to 120
+    doc.text("Header", 122, yPos + 7);
     doc.setFont('helvetica', 'normal');
 }
 
 // Draw new table data
 function drawNewData() {
-    let yPos = 60;
+    let yPos = boxStartY + 10; // align with the other table
     for (let i = 0; i < newTableHeader.length; i++) {
-        drawCell(20, yPos, 50, 10);
+        drawCell(120, yPos, 50, 10); // move table to the right by setting x position to 120
         doc.setFontSize(12); // Use the same font size as the rest of the document
-        doc.text(newTableHeader[i], 22, yPos + 7);
+        doc.text(newTableHeader[i], 122, yPos + 7);
 
         // Check if the condition is met
         if (data.chckPasthistoryofPatient.includes(newTableHeader[i])) {
-            drawCell(70, yPos, 50, 10);
-            doc.text('X', 72, yPos + 7);
+            drawCell(170, yPos, 50, 10); // move table to the right by setting x position to 170
+            doc.text('X', 172, yPos + 7);
         } else {
-            drawCell(70, yPos, 50, 10);
+            drawCell(170, yPos, 50, 10); // move table to the right by setting x position to 170
         }
         yPos += 10;
     }
 }
 
 function drawAdditionalData() {
-    let yPos = 60;
+    let yPos = boxStartY + 10; // align with the other table
     const additionalData = [data.diabetes, data.bloodPressure];
     for (let i = 0; i < 2; i++) {
-        drawCell(120, yPos, 50, 10);
+        drawCell(220, yPos, 50, 10);
         doc.setFontSize(12); // Use the same font size as the rest of the document
-        doc.text(additionalData[i], 122, yPos + 7);
+        doc.text(additionalData[i], 222, yPos + 7);
         yPos += 10;
     }
 }
