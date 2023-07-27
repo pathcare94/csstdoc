@@ -171,46 +171,76 @@ addSectionTitle("Visit Details");
 //addText(`Present Complaints: ${data.presentComplaints}`);
 addDivider();
 
-// New table - Headers
+// New table
 const newTableHeader = ['Diabetes', 'Hypertension', 'H/O TB', 'Blood Thinners', 'H/O Heart Disease', 'Asthama', 'Allergy'];
 const fontSize = 12; // The font size you are using
 
 // Calculate the width of each heading in mm
-const specificHeaderWidth = doc.getStringUnitWidth('Hypertension') * fontSize * 0.3528;
+const headerWidths = newTableHeader.map(header => doc.getStringUnitWidth(header) * fontSize * 0.3528);
 
 // Add some padding to each column
 const padding = 2; // 2mm padding on each side
-const columnWidth = specificHeaderWidth + 2 * padding;
+const newColumnWidths = headerWidths.map(width => width + 2 * padding);
 
-// Draw new table
-function drawNewTable() {
+// Draw new table header
+function drawNewHeader() {
     doc.setFont('helvetica', 'bold');
-    let yPos = lineHeight;
-
+    let xPos = 12;
     for (let i = 0; i < newTableHeader.length; i++) {
+        drawCell(xPos, lineHeight - 6, newColumnWidths[i], 10);
         doc.setFontSize(12); // Use the same font size as the rest of the document
-        // Header
-        drawCell(10, yPos, columnWidth, 10);
-        doc.text(newTableHeader[i], 10 + padding, yPos + 7);
-        // Draw new data
-        drawCell(10 + columnWidth, yPos, columnWidth, 10);
-        // Check if the condition is met
-        if (data.chckPasthistoryofPatient.includes(newTableHeader[i])) {
-            doc.text('X', 10 + columnWidth + columnWidth/2, yPos + 7, { align: "center" });
-        }
-        // Additional data
-        drawCell(10 + 2 * columnWidth, yPos, columnWidth, 10);
-        const cellText = doc.splitTextToSize(data.additional[i], columnWidth - 4);
-        doc.text(cellText, 10 + 2 * columnWidth + padding, yPos + 7);
-
-        yPos += 10;
+        doc.text(newTableHeader[i], xPos + 2, lineHeight + 2);
+        xPos += newColumnWidths[i];
     }
+    lineHeight += 10;
     doc.setFont('helvetica', 'normal');
-    lineHeight = yPos;
 }
 
-drawNewTable();
+// Draw new table data
+function drawNewData() {
+    let xPos = 12;
+    for (let i = 0; i < newTableHeader.length; i++) {
+        drawCell(xPos, lineHeight - 6, newColumnWidths[i], 10);
+        doc.setFontSize(12); // Use the same font size as the rest of the document
+        // Check if the condition is met
+        if (data.chckPasthistoryofPatient.includes(newTableHeader[i])) {
+            doc.text('X', xPos + newColumnWidths[i] / 2, lineHeight + 2, { align: "center" });
+        }
+        xPos += newColumnWidths[i];
+    }
+    lineHeight += 10;
+    doc.setFont('helvetica', 'normal');
+}
 
+function drawAdditionalData() {
+    let xPos = 12;
+    const additionalData = [data.diabetes, data.bloodPressure];
+
+    let maxRowHeight = 10;
+    for (let i = 0; i < 2; i++) {
+        const cellText = doc.splitTextToSize(additionalData[i], newColumnWidths[i] - 4);
+        const cellHeight = cellText.length * 7;
+        if (cellHeight > maxRowHeight) {
+            maxRowHeight = cellHeight;
+        }
+    }
+
+    for (let i = 0; i < 2; i++) {
+        drawCell(xPos, lineHeight - 6, newColumnWidths[i], maxRowHeight);
+
+        // Wrap text if it doesn't fit in the cell
+        const cellText = doc.splitTextToSize(additionalData[i], newColumnWidths[i] - 4);
+        doc.setFontSize(12); // Use the same font size as the rest of the document
+        doc.text(cellText, xPos + 2, lineHeight + 2);
+        xPos += newColumnWidths[i];
+    }
+    lineHeight += maxRowHeight;
+    doc.setFont('helvetica', 'normal');
+}
+
+drawNewHeader();
+drawNewData();
+drawAdditionalData();
 
 
 // Continue with the rest of the code
