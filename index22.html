@@ -176,11 +176,11 @@ const newTableHeader = ['Diabetes', 'Hypertension', 'H/O TB', 'Blood Thinners', 
 const fontSize = 12; // The font size you are using
 
 // Calculate the width of each heading in mm
-const headerWidth = doc.getStringUnitWidth('Hypertension') * fontSize * 0.3528;
+const specificHeaderWidth = doc.getStringUnitWidth('Hypertension') * fontSize * 0.3528;
 
 // Add some padding to each column
 const padding = 2; // 2mm padding on each side
-const columnWidth = headerWidth + 2 * padding;
+const columnWidth = specificHeaderWidth + 2 * padding;
 
 // Draw new table
 function drawNewTable() {
