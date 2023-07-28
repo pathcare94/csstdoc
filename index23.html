@@ -86,58 +86,12 @@ function addHeaderAndFooter() {
     }
 }
 
- // Define Y position for the medicine and new tables
-let medicineTableYPos;
-let newTableYPos;
-
-function addSectionTitle(title) {
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text(title, 10, lineHeight);
-    lineHeight += 10;
-
-    if (title === "Visit Details") {
-        newTableYPos = lineHeight;
-    } else if (title === "Medicines") {
-        medicineTableYPos = lineHeight;
+    function addSectionTitle(title) {
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text(title, 10, lineHeight);
+        lineHeight += 10;
     }
-}
-
-function drawNewHeader() {
-    doc.setFont('helvetica', 'bold');
-    let xPos = boxStartX + tableWidth + 2; // Align with the right of the boxes table + 2mm
-    doc.text("Header", xPos, newTableYPos);
-    doc.setFont('helvetica', 'normal');
-    newTableYPos += 10; // Increase line height after writing the header
-}
-
-function drawNewData() {
-    let xPos = boxStartX + tableWidth + 2; // Align with the right of the boxes table + 2mm
-    for (let i = 0; i < newTableHeader.length; i++) {
-        doc.setFontSize(12); // Use the same font size as the rest of the document
-        doc.text(newTableHeader[i], xPos, newTableYPos + 7);
-
-        // Check if the condition is met
-        if (data.chckPasthistoryofPatient.includes(newTableHeader[i])) {
-            doc.text('X', xPos + 30, newTableYPos + 7); // Move 'X' to a position in the same line
-        }
-        newTableYPos += 10;
-    }
-}
-
-function drawHeader() {
-    doc.setFont('helvetica', 'bold');
-    let xPos = 12;
-    for (let i = 0; i < tableHeader.length; i++) {
-        drawCell(xPos, medicineTableYPos - 6, columnWidths[i], 10);
-        doc.setFontSize(7.8); // Use the same font size as the rest of the document
-        doc.text(tableHeader[i], xPos + (1), medicineTableYPos + (0.5));
-        xPos += columnWidths[i];
-    }
-    medicineTableYPos += 10;
-    doc.setFont('helvetica', 'normal');
-}
-
 
     function addText(text) {
     const pageHeight = 297; // A4 page height in mm
