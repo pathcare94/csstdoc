@@ -171,6 +171,13 @@ addSectionTitle("Visit Details");
 //addText(`Present Complaints: ${data.presentComplaints}`);
 addDivider();
 
+// Define the total width for the table and column widths based on your provided ratio (1:2:2)
+const totalTableWidth = 69; // total table width in mm
+const column1Width = totalTableWidth / 5; // width for the first column
+const column2Width = 2 * totalTableWidth / 5; // width for the second column
+const column3Width = 2 * totalTableWidth / 5; // width for the third column
+
+        
 // New table
 const newTableHeader = ['Diabetes', 'Hypertension', 'H/O TB', 'Blood Thinners', 'H/O Heart Disease', 'Asthama', 'Allergy'];
 const fontSize = 12; // The font size you are using
@@ -186,7 +193,7 @@ const newColumnWidths = headerWidths.map(width => width + 2 * padding);
 function drawNewHeader() {
     doc.setFont('helvetica', 'bold');
     let yPos = boxStartY; // change from 50 to boxStartY to align with the other table
-    drawCell(120, yPos, 50, 10); // move table to the right by setting x position to 120
+    drawCell(120, yPos, column1Width, 10); // adjust the width of the cell
     doc.text("Header", 122, yPos + 7);
     doc.setFont('helvetica', 'normal');
 }
@@ -195,13 +202,13 @@ function drawNewHeader() {
 function drawNewData() {
     let yPos = boxStartY + 10; // align with the other table
     for (let i = 0; i < newTableHeader.length; i++) {
-        drawCell(120, yPos, 50, 10); // move table to the right by setting x position to 120
+        drawCell(120, yPos, column1Width, 10); // adjust the width of the cell
         doc.setFontSize(12); // Use the same font size as the rest of the document
         doc.text(newTableHeader[i], 122, yPos + 7);
 
         // Check if the condition is met
         if (data.chckPasthistoryofPatient.includes(newTableHeader[i])) {
-            drawCell(170, yPos, 50, 10); // move table to the right by setting x position to 170
+           drawCell(120 + column1Width, yPos, column2Width, 10); // adjust the x position and width of the cell
             doc.text('X', 172, yPos + 7);
         } else {
             drawCell(170, yPos, 50, 10); // move table to the right by setting x position to 170
@@ -214,7 +221,7 @@ function drawAdditionalData() {
     let yPos = boxStartY + 10; // align with the other table
     const additionalData = [data.diabetes, data.bloodPressure];
     for (let i = 0; i < 2; i++) {
-        drawCell(220, yPos, 50, 10);
+         drawCell(120 + column1Width + column2Width, yPos, column3Width, 10); // adjust the x position and width of the cell
         doc.setFontSize(12); // Use the same font size as the rest of the document
         doc.text(additionalData[i], 222, yPos + 7);
         yPos += 10;
