@@ -189,11 +189,13 @@ const headerWidths = newTableHeader.map(header => doc.getStringUnitWidth(header)
 const padding = 2; // 2mm padding on each side
 const newColumnWidths = headerWidths.map(width => width + 2 * padding);
 
+
 // Draw new table header
 function drawNewHeader() {
     doc.setFont('helvetica', 'bold');
     let yPos = boxStartY + boxHeight * 5; // Align with the other table
-    doc.text("Header", 10, yPos);
+    let xPos = boxStartX + tableWidth + 2; // Align with the right of the boxes table + 2mm
+    doc.text("Header", xPos, yPos);
     doc.setFont('helvetica', 'normal');
     lineHeight += 10; // Increase line height after writing the header
 }
@@ -201,13 +203,14 @@ function drawNewHeader() {
 // Draw new table data
 function drawNewData() {
     let yPos = boxStartY + boxHeight * 5 + 10; // Align with the other table
+    let xPos = boxStartX + tableWidth + 2; // Align with the right of the boxes table + 2mm
     for (let i = 0; i < newTableHeader.length; i++) {
         doc.setFontSize(12); // Use the same font size as the rest of the document
-        doc.text(newTableHeader[i], 10, yPos + 7);
+        doc.text(newTableHeader[i], xPos, yPos + 7);
 
         // Check if the condition is met
         if (data.chckPasthistoryofPatient.includes(newTableHeader[i])) {
-            doc.text('X', 40, yPos + 7);
+            doc.text('X', xPos + 30, yPos + 7); // Move 'X' to a position in the same line
         }
         yPos += 10;
     }
@@ -215,19 +218,18 @@ function drawNewData() {
 
 function drawAdditionalData() {
     let yPos = boxStartY + boxHeight * 5 + 10; // Align with the other table
+    let xPos = boxStartX + tableWidth + 2; // Align with the right of the boxes table + 2mm
     const additionalData = [data.diabetes, data.bloodPressure];
     for (let i = 0; i < 2; i++) {
         doc.setFontSize(12); // Use the same font size as the rest of the document
-        doc.text(additionalData[i], 70, yPos + 7);
+        doc.text(additionalData[i], xPos, yPos + 7);
         yPos += 10;
     }
 }
 
-
 drawNewHeader();
 drawNewData();
 drawAdditionalData();
-
 
 // Continue with the rest of the code
 // ...
