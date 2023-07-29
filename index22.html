@@ -188,33 +188,40 @@ const newColumnWidths = new Array(3).fill(columnWidth);
 // Starting positions
 let xPos = 12; 
 
+
 // Draw new table
 function drawNewTable() {
+    const column1Width = columnWidth + padding;  // Increase width of column 1
+    const column2Width = columnWidth - padding / 2;  // Decrease width of column 2
+    const column3Width = columnWidth - padding / 2;  // Decrease width of column 3
+
     doc.setFont('helvetica', 'bold');
     for (let i = 0; i < newTableHeader.length; i++) {
         let yPos = lineHeight - 6;
-        
-        drawCell(xPos, yPos, newColumnWidths[0], 10);
-        doc.setFontSize(12); 
-        doc.text(newTableHeader[i], xPos + padding, yPos + padding + 4); 
-        xPos += newColumnWidths[0] + (2 * padding); // adding padding to x position
 
-        drawCell(xPos, yPos, newColumnWidths[1], 10);
+        drawCell(xPos, yPos, column1Width, 10);
+        doc.setFontSize(10);  // Decrease font size
+        doc.text(newTableHeader[i], xPos, yPos + 4); 
+        xPos += column1Width;
+
+        drawCell(xPos, yPos, column2Width, 10);
         if (data.chckPasthistoryofPatient.includes(newTableHeader[i])) {
-            doc.text('X', xPos + newColumnWidths[1] / 2, yPos + padding + 4, { align: "center" });
+            doc.text('X', xPos + column2Width / 2, yPos + 4, { align: "center" });
         }
-        xPos += newColumnWidths[1] + (2 * padding);
+        xPos += column2Width;
 
         const additionalData = i < 2 ? [data.diabetes, data.bloodPressure][i] : "";
-        drawCell(xPos, yPos, newColumnWidths[2], 10);
-        const cellText = doc.splitTextToSize(additionalData, newColumnWidths[2] - (2 * padding));
+        drawCell(xPos, yPos, column3Width, 10);
+        const cellText = doc.splitTextToSize(additionalData, column3Width);
         doc.setFontSize(12); 
-        doc.text(cellText, xPos + padding, yPos + padding + 4);
+        doc.text(cellText, xPos, yPos + 4);
 
         lineHeight += 10;
         xPos = 12; // Reset xPos for the new row
     }
     doc.setFont('helvetica', 'normal');
+}
+
 }
 
 
