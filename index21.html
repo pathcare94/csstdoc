@@ -171,73 +171,77 @@ addSectionTitle("Visit Details");
 //addText(`Present Complaints: ${data.presentComplaints}`);
 addDivider();
 
-// Transposed table
-const newTableHeader = ['Condition', 'Presence'];
+// New table
+const newTableHeader = ['Diabetes', 'Hypertension', 'H/O TB', 'Blood Thinners', 'H/O Heart Disease', 'Asthama', 'Allergy'];
+const fontSize = 12; // The font size you are using
 
-// Draw transposed table header
+// Calculate the width of each heading in mm
+const headerWidths = newTableHeader.map(header => doc.getStringUnitWidth(header) * fontSize * 0.3528);
+
+// Add some padding to each column
+const padding = 2; // 2mm padding on each side
+const newColumnWidths = headerWidths.map(width => width + 2 * padding);
+
+// Draw new table header
 function drawNewHeader() {
     doc.setFont('helvetica', 'bold');
     let xPos = 12;
     for (let i = 0; i < newTableHeader.length; i++) {
-        const width = doc.getStringUnitWidth(newTableHeader[i]) * fontSize * 0.3528 + 2 * padding; // calculate width for each header
-        drawCell(xPos, lineHeight - 6, width, 10);
+        drawCell(xPos, lineHeight - 6, newColumnWidths[i], 10);
         doc.setFontSize(12); // Use the same font size as the rest of the document
         doc.text(newTableHeader[i], xPos + 2, lineHeight + 2);
-        xPos += width;
+        xPos += newColumnWidths[i];
     }
     lineHeight += 10;
     doc.setFont('helvetica', 'normal');
 }
 
-// Draw transposed table data
+// Draw new table data
 function drawNewData() {
-    const conditions = ['Diabetes', 'Hypertension', 'H/O TB', 'Blood Thinners', 'H/O Heart Disease', 'Asthama', 'Allergy']; // previously as headers
-
-    conditions.forEach(condition => {
-        let xPos = 12;
-
-        // Draw condition cell
-        const conditionWidth = doc.getStringUnitWidth(condition) * fontSize * 0.3528 + 2 * padding;
-        drawCell(xPos, lineHeight - 6, conditionWidth, 10);
+    let xPos = 12;
+    for (let i = 0; i < newTableHeader.length; i++) {
+        drawCell(xPos, lineHeight - 6, newColumnWidths[i], 10);
         doc.setFontSize(12); // Use the same font size as the rest of the document
-        doc.text(condition, xPos + 2, lineHeight + 2);
-        xPos += conditionWidth;
-
-        // Draw presence cell
-        const presenceWidth = doc.getStringUnitWidth('Presence') * fontSize * 0.3528 + 2 * padding;
-        drawCell(xPos, lineHeight - 6, presenceWidth, 10);
-        if (data.chckPasthistoryofPatient.includes(condition)) {
-            doc.text('X', xPos + presenceWidth / 2, lineHeight + 2, { align: "center" });
+        // Check if the condition is met
+        if (data.chckPasthistoryofPatient.includes(newTableHeader[i])) {
+            doc.text('X', xPos + newColumnWidths[i] / 2, lineHeight + 2, { align: "center" });
         }
-
-        lineHeight += 10;
-    });
+        xPos += newColumnWidths[i];
+    }
+    lineHeight += 10;
     doc.setFont('helvetica', 'normal');
 }
 
-
 function drawAdditionalData() {
-    let yPos = lineHeight;
+    let xPos = 12;
     const additionalData = [data.diabetes, data.bloodPressure];
 
-    let maxColumnWidth = Math.max(newColumnWidths[0], newColumnWidths[1]);
+    let maxRowHeight = 10;
+    for (let i = 0; i < 2; i++) {
+        const cellText = doc.splitTextToSize(additionalData[i], newColumnWidths[i] - 4);
+        const cellHeight = cellText.length * 7;
+        if (cellHeight > maxRowHeight) {
+            maxRowHeight = cellHeight;
+        }
+    }
 
     for (let i = 0; i < 2; i++) {
-        // Wrap text if it doesn't fit in the cell
-        const cellText = doc.splitTextToSize(additionalData[i], maxColumnWidth - 4);
-        drawCell(12, yPos - 6, maxColumnWidth, 10);
+        drawCell(xPos, lineHeight - 6, newColumnWidths[i], maxRowHeight);
 
+        // Wrap text if it doesn't fit in the cell
+        const cellText = doc.splitTextToSize(additionalData[i], newColumnWidths[i] - 4);
         doc.setFontSize(12); // Use the same font size as the rest of the document
-        doc.text(cellText, 14, yPos + 2);
-        yPos += 10;
+        doc.text(cellText, xPos + 2, lineHeight + 2);
+        xPos += newColumnWidths[i];
     }
-    lineHeight = yPos;
+    lineHeight += maxRowHeight;
     doc.setFont('helvetica', 'normal');
 }
 
 drawNewHeader();
 drawNewData();
 drawAdditionalData();
+
 
 // Continue with the rest of the code
 // ...
