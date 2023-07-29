@@ -171,18 +171,16 @@ addSectionTitle("Visit Details");
 //addText(`Present Complaints: ${data.presentComplaints}`);
 addDivider();
 
-//
-function drawCell(x, y, w, h) {
-    doc.rect(x, y, w, h);
-}
-
-// New table
-const newTableHeader = ['Diabetes', 'Hypertension', 'H/O TB', 'Blood Thinners', 'H/O Heart Disease', 'Asthama', 'Allergy'];
-
-// Calculate the width of each column in mm
-const columnWidth = 60; // fixed column width
+const totalTableWidth = 69; // total width in mm
 const padding = 2; // 2mm padding on each side
-const newColumnWidths = new Array(3).fill(columnWidth + 2 * padding);
+const secondColumnWidth = 5; // very thin column for 'X'
+
+// Compute widths of first and third columns, dividing remaining width equally
+const remainingWidth = totalTableWidth - secondColumnWidth - 4 * padding; // account for padding
+const firstAndThirdColumnWidth = remainingWidth / 2; // we split the remaining width equally
+
+// Array of column widths [first, second, third]
+const newColumnWidths = [firstAndThirdColumnWidth, secondColumnWidth, firstAndThirdColumnWidth];
 
 // Draw new table
 function drawNewTable() {
@@ -193,14 +191,14 @@ function drawNewTable() {
         drawCell(xPos, yPos, newColumnWidths[0], 10);
         doc.setFontSize(12); // Use the same font size as the rest of the document
         doc.text(newTableHeader[i], xPos + 2, lineHeight + 2);
-        xPos += newColumnWidths[0];
+        xPos += newColumnWidths[0] + padding; // account for padding
 
         drawCell(xPos, yPos, newColumnWidths[1], 10);
         // Check if the condition is met
         if (data.chckPasthistoryofPatient.includes(newTableHeader[i])) {
             doc.text('X', xPos + newColumnWidths[1] / 2, lineHeight + 2, { align: "center" });
         }
-        xPos += newColumnWidths[1];
+        xPos += newColumnWidths[1] + padding; // account for padding
 
         const additionalData = i < 2 ? [data.diabetes, data.bloodPressure][i] : "";
         drawCell(xPos, yPos, newColumnWidths[2], 10);
@@ -213,8 +211,6 @@ function drawNewTable() {
     }
     doc.setFont('helvetica', 'normal');
 }
-
-drawNewTable();
 
 
 // Continue with the rest of the code
