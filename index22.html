@@ -1,358 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>jsPDF Example</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-        }
-        button {
-            padding: 10px 20px;
-            margin-bottom: 10px;
-            border: none;
-            cursor: pointer;
-            text-align: center;
-            font-size: 16px;
-        }
-        #create-pdf {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        #create-pdf:hover {
-            background-color: #45a049;
-        }
-
-        #create-pdf-no-images {
-            background-color: #2196F3;
-            color: white;
-        }
-
-        #create-pdf-no-images:hover {
-            background-color: #1E88E5;
-        }
-    </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
-</head>
-<body>
-<button id="create-pdf">Create PDF</button>
-<button id="create-pdf-no-images">Create PDF (No Images)</button>
-<script>
-    function getQueryParam(param) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(param);
-    }
-const infoText = decodeURIComponent(getQueryParam('infoText'));
-const data = JSON.parse(infoText);
-
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    const options = {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-    };
-
-    // Correct the date by adding the timezone offset and 1 day
-    const correctedDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000 + 86400000);
-    return new Intl.DateTimeFormat('en-US', options).format(correctedDate);
-}
-
-
-    function createPdf(includeImages) {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.setFontSize(12);
-
-    const headerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1687437451/headermitra_qqhvxl.jpg";
-    const footerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1687437841/footermitra_f645xu.jpg";
-
-    const headerAspectRatio = 1694 / 458;
-    const footerAspectRatio = 1686 / 280;
-
-    const headerWidth = 210; // A4 page width in mm
-    const headerHeight = headerWidth / headerAspectRatio;
-
-    const footerWidth = 210; // A4 page width in mm
-    const footerHeight = footerWidth / footerAspectRatio;
-
-function addHeaderAndFooter() {
-    if (includeImages) {
-        doc.addImage(headerImageUrl, 'PNG', 0, 0, headerWidth, headerHeight);
-        doc.addImage(footerImageUrl, 'PNG', 0, 297 - footerHeight, footerWidth, footerHeight);
-    }
-}
-
-    function addSectionTitle(title) {
-        doc.setFontSize(14);
-        doc.setFont('helvetica', 'bold');
-        doc.text(title, 10, lineHeight);
-        lineHeight += 10;
-    }
-
-    function addText(text) {
-    const pageHeight = 297; // A4 page height in mm
-    const textMargin = 10;
-    const maxLineWidth = 190; // Set max line width for text
-
-const wrappedText = doc.splitTextToSize(text, maxLineWidth);
-
-    if (lineHeight + (wrappedText.length * 7) >= (pageHeight - footerHeight - textMargin)) {
-        doc.addPage();
-        addHeaderAndFooter(); // Add header and footer to the new page
-        lineHeight = headerHeight + 5;
-    }
-
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'normal');
-    doc.text(wrappedText, 10, lineHeight);
-    lineHeight += wrappedText.length * 7;
-}
-
-    function addDivider() {
-        doc.setLineWidth(0.5);
-        doc.line(10, lineHeight - 3, 200, lineHeight - 3);
-        lineHeight += 7;
-    }
-
-// Modified code
-addHeaderAndFooter();
-let lineHeight = headerHeight + 5;
-
-// Add visit date
-doc.setFontSize(12);
-doc.setFont('helvetica', 'normal');
-doc.text(`Visit Date: ${formatDate(data.visitDate)}`, 150, lineHeight);
-lineHeight += 10;
-
-// Add boxes
-const tableWidth = 95; // Table width in mm
-const tableHeight = 30; // Table height in mm
-const boxWidth = tableWidth / 5;
-const boxHeight = tableHeight / 4;
-const boxStartX = 210 - tableWidth - 20; // Adjust this value to move the grid to the right side of the page, 20mm from the edge
-const boxStartY = lineHeight;
-const boxLabels = [
-    "", "SPH", "CYL", "AXIS", "V/N",
-    "RIGHT", String(data.rightEyeSphere || ""), String(data.rightEyeCylinder || ""), String(data.rightEyeAxis || ""), String(data.rightEyeWithGlasses || ""),
-    "LEFT", String(data.leftEyeSphere || ""), String(data.leftEyeCylinder || ""), String(data.leftEyeAxis || ""), String(data.leftEyeWithGlasses || ""),
-    "ADD", String(data.iptRightNearAdj || ""), String(data.iptLeftNearAdj || ""), "", ""
-];
-
-
-
-
-for (let i = 0; i < 20; i++) {
-    const boxX = boxStartX + (i % 5) * boxWidth;
-    const boxY = boxStartY + Math.floor(i / 5) * boxHeight;
-    doc.rect(boxX, boxY, boxWidth, boxHeight);
-    doc.setFont('helvetica', 'bold'); // Set font to bold
-    doc.text(boxLabels[i], boxX + boxWidth / 2, boxY + boxHeight / 2, { align: "center", baseline: "middle" }); // Center align text both horizontally and vertically
-    doc.setFont('helvetica', 'normal'); // Reset font to normal for other elements
-}
-
-lineHeight = headerHeight + 5; // Reset lineHeight to start patient details right below the header
-
-// Add patient details
-addSectionTitle("Patient Details");
-addText(`Name: ${data.patientName}`);
-addText(`Phone Number: ${data.phoneNumber}`);
-addText(`Gender: ${data.gender}`);
-addText(`Date of Birth: ${formatDate(data.dateOfBirth)}`);
-addText(`Age: ${data.age}`);
-addDivider();
-
-// Add visit details
-addSectionTitle("Visit Details");
-// No need to print present complaints anymore.
-//addText(`Present Complaints: ${data.presentComplaints}`);
-addDivider();
-
-//...
-// Calculate total width of medicine table
-const totalMedicineTableWidth = columnWidths.reduce((a, b) => a + b, 0) + 2; // +2 to add 2mm
-
 // New table
 const newTableHeader = ['Diabetes', 'Hypertension', 'H/O TB', 'Blood Thinners', 'H/O Heart Disease', 'Asthama', 'Allergy'];
 
-// Calculate the width of each heading in mm
-const headerWidths = newTableHeader.map(header => doc.getStringUnitWidth(header) * fontSize * 0.3528);
-
-// Add some padding to each column
+// Calculate the width of each column in mm
+const columnWidth = 60; // fixed column width
 const padding = 2; // 2mm padding on each side
-const newColumnWidths = headerWidths.map(width => width + 2 * padding);
+const newColumnWidths = new Array(3).fill(columnWidth + 2 * padding);
 
-// Draw new table header
-function drawNewHeader() {
+// Draw new table
+function drawNewTable() {
     doc.setFont('helvetica', 'bold');
-    let yPos = boxStartY; // change from 50 to boxStartY to align with the other table
-    drawCell(totalMedicineTableWidth, yPos, 50, 10); // start table from the end of the medicine table + 2mm
-    doc.text("Header", totalMedicineTableWidth + 2, yPos + 7);
-    doc.setFont('helvetica', 'normal');
-}
-
-// Draw new table data
-function drawNewData() {
-    let yPos = boxStartY + 10; // align with the other table
     for (let i = 0; i < newTableHeader.length; i++) {
-        drawCell(totalMedicineTableWidth, yPos, 50, 10); // start table from the end of the medicine table + 2mm
+        let yPos = lineHeight - 6;
+        let xPos = 12;
+        drawCell(xPos, yPos, newColumnWidths[0], 10);
         doc.setFontSize(12); // Use the same font size as the rest of the document
-        doc.text(newTableHeader[i], totalMedicineTableWidth + 2, yPos + 7);
+        doc.text(newTableHeader[i], xPos + 2, lineHeight + 2);
+        xPos += newColumnWidths[0];
 
+        drawCell(xPos, yPos, newColumnWidths[1], 10);
         // Check if the condition is met
         if (data.chckPasthistoryofPatient.includes(newTableHeader[i])) {
-            drawCell(totalMedicineTableWidth + 50, yPos, 50, 10); // move table to the right by setting x position to 170
-            doc.text('X', totalMedicineTableWidth + 52, yPos + 7);
-        } else {
-            drawCell(totalMedicineTableWidth + 50, yPos, 50, 10); // move table to the right by setting x position to 170
+            doc.text('X', xPos + newColumnWidths[1] / 2, lineHeight + 2, { align: "center" });
         }
-        yPos += 10;
-    }
-}
+        xPos += newColumnWidths[1];
 
-function drawAdditionalData() {
-    let yPos = boxStartY + 10; // align with the other table
-    const additionalData = [data.diabetes, data.bloodPressure];
-    for (let i = 0; i < 2; i++) {
-        drawCell(totalMedicineTableWidth + 100, yPos, 50, 10); // start table from the end of the medicine table + 2mm
+        const additionalData = i < 2 ? [data.diabetes, data.bloodPressure][i] : "";
+        drawCell(xPos, yPos, newColumnWidths[2], 10);
+        // Wrap text if it doesn't fit in the cell
+        const cellText = doc.splitTextToSize(additionalData, newColumnWidths[2] - 4);
         doc.setFontSize(12); // Use the same font size as the rest of the document
-        doc.text(additionalData[i], totalMedicineTableWidth + 102, yPos + 7);
-        yPos += 10;
+        doc.text(cellText, xPos + 2, lineHeight + 2);
+
+        lineHeight += 10;
     }
-}
-
-drawNewHeader();
-drawNewData();
-drawAdditionalData();
-//...
-
-
-// Continue with the rest of the code
-// ...
-
-addDivider();
-// Add medicines
-doc.setFont('helvetica', 'normal');
-doc.setLineWidth(0.5);
-
-const tableHeader = ['S.No', 'Medicine', 'Dosage', 'Frequency', 'Timings', 'Meal', 'Duration'];
-  const columnWidths = [9.5, 27.13, 15.79, 15.79, 22.13, 12.66, 15.79];
-
-function drawHeader() {
-    doc.setFont('helvetica', 'bold');
-    let xPos = 12;
-    for (let i = 0; i < tableHeader.length; i++) {
-        drawCell(xPos, lineHeight - 6, columnWidths[i], 10);
-        doc.setFontSize(7.8); // Use the same font size as the rest of the document
-        doc.text(tableHeader[i], xPos + (1), lineHeight + (0.5));
-        xPos += columnWidths[i];
-    }
-    lineHeight += 10;
     doc.setFont('helvetica', 'normal');
 }
 
-function drawRow(serial, medicineName, dosage, frequency, timings, meal, duration, notes) {
-    let xPos = 12;
-    const rowData = [serial, medicineName, dosage, frequency, timings, meal, `${duration} days`];
-
-    let maxRowHeight = 10;
-    for (let i = 0; i < rowData.length; i++) {
-        const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 4);
-        const cellHeight = cellText.length * 7;
-        if (cellHeight > maxRowHeight) {
-            maxRowHeight = cellHeight;
-        }
-    }
-
-    // Check if the page height is enough for adding new row. If not, add a new page.
-    if (lineHeight + maxRowHeight >= (297 - footerHeight)) {
-        doc.addPage();
-        lineHeight = headerHeight + 5; // reset lineHeight for new page
-        addHeaderAndFooter(); // Add header and footer to the new page
-        drawHeader(); // Draw table header on the new page
-    }
-    
-    for (let i = 0; i < rowData.length; i++) {
-        drawCell(xPos, lineHeight - 6, columnWidths[i], maxRowHeight);
-
-        // Wrap text if it doesn't fit in the cell
-        const cellText = doc.splitTextToSize(rowData[i].toString(), columnWidths[i] - 4);
-        doc.setFontSize(7.8); // Use the same font size as the rest of the document
-        doc.text(cellText, xPos + (1), lineHeight + (0.5));
-        xPos += columnWidths[i];
-    }
-    lineHeight += maxRowHeight;
-
-    // Add additional notes row if notes are present
-    if (notes && notes.trim() !== "") {
-        const notesText = `Notes: ${notes}`;
-          const notesBoxWidth = columnWidths.reduce((a, b) => a + b, 0); // This line changes the width of the notes box to match the width of the table
-        const wrappedNotesText = doc.splitTextToSize(notesText, notesBoxWidth - 4);
-        const notesHeight = wrappedNotesText.length * 7;
-
-   // Merge all the cells in the row for notes
-        doc.rect(12, lineHeight - 6, notesBoxWidth, notesHeight);
-         doc.text(wrappedNotesText, 14, lineHeight - 6 + 3); // Reduced margin from 5 to 3
-
-        lineHeight += notesHeight;
-    }
-}
-
-        
-
-function drawCell(x, y, width, height) {
-    doc.rect(x, y, width, height);
-}
-
-drawHeader();
-
-for (let i = 1; i <= 15; i++) {
-    if (data[`medicine${i}`]) {
-        const medicineName = data.displaystates[i - 1] ? data[`displayName${i}`] : data[`medicine${i}`];
-        const notes = data[`notes${i}`] || ""; // Add this line to fetch notes
-        drawRow(
-            i,
-            medicineName,
-            data[`dosage${i}`],
-            data[`frequency${i}`],
-            data[`selectedTimings${i}`],
-            data[`meal${i}`],
-            data[`duration${i}`],
-            notes // Add this parameter to pass the notes to the drawRow function
-        );
-    }
-}
-
-
-
-
-    // Add additional details
-    addDivider();
-    addSectionTitle("Additional Details");
-    addText(`Next Visit: ${formatDate(data.nextVisit)}`);
-    addText(`Advised: ${data.selectedTests}`);
-    addText(`Any Other Remarks: ${data.anyOtherRemarks}`);
-    
-
-    // Save the PDF
-const formattedVisitDate = formatDate(data.visitDate).replace(/,|\s+/g, '-');
-const utcVisitDate = new Date(new Date(data.visitDate).getTime() + new Date(data.visitDate).getTimezoneOffset() * 60000);
-const utcFormattedVisitDate = formatDate(utcVisitDate).replace(/,|\s+/g, '-');
-doc.save(`${data.patientName.replace(/\s+/g, '_')}_${utcFormattedVisitDate}.pdf`);
-
-
-}
-
-document.getElementById("create-pdf").addEventListener("click", function () {
-    createPdf(true);
-});
-
-document.getElementById("create-pdf-no-images").addEventListener("click", function () {
-    createPdf(false);
-});
-</script>
-</body>
-</html>
+drawNewTable();
