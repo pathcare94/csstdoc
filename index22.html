@@ -170,9 +170,7 @@ addSectionTitle("Visit Details");
 // No need to print present complaints anymore.
 //addText(`Present Complaints: ${data.presentComplaints}`);
 addDivider();
-function drawCell(x, y, w, h) {
-    doc.rect(x, y, w, h);
-}
+
 
 function drawCell(x, y, w, h) {
     doc.rect(x, y, w, h);
@@ -189,7 +187,7 @@ const newColumnWidths = new Array(3).fill(columnWidth);
 
 // Starting positions
 let xPos = 12; 
-let lineHeight = 20; // Define lineHeight
+lineHeight = 20; // Define lineHeight without the 'let' keyword
 
 // Draw new table
 function drawNewTable() {
@@ -220,8 +218,8 @@ function drawNewTable() {
     doc.setFont('helvetica', 'normal');
 }
 
-drawNewTable();
 
+drawNewTable();
 
 // Continue with the rest of the code
 // ...
