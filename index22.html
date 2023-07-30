@@ -188,16 +188,15 @@ const newColumnWidths = [columnWidth + 10, columnWidth - 5, columnWidth - 5];
 // Starting positions
 let xPos = 12; 
 
-// Draw new table
 function drawNewTable() {
     doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12 * 0.7); // Reduced font size by 30%
     for (let i = 0; i < newTableHeader.length; i++) {
         let yPos = lineHeight - 6;
         
         drawCell(xPos, yPos, newColumnWidths[0], 10);
-        doc.setFontSize(12); 
-        doc.text(newTableHeader[i], xPos + padding, yPos + padding + 4, { align: "left", baseline: "middle" });
-        xPos += newColumnWidths[0] + (2 * padding); // adding padding to x position
+        doc.text(newTableHeader[i], xPos + padding + 2, yPos + padding + 4, { align: "left", baseline: "middle" }); // Shifted text 2mm to the right
+        xPos += newColumnWidths[0] + (2 * padding);
 
         drawCell(xPos, yPos, newColumnWidths[1], 10);
         if (data.chckPasthistoryofPatient.includes(newTableHeader[i])) {
@@ -208,14 +207,14 @@ function drawNewTable() {
         const additionalData = i < 2 ? [data.diabetes, data.bloodPressure][i] : "";
         drawCell(xPos, yPos, newColumnWidths[2], 10);
         const cellText = doc.splitTextToSize(additionalData, newColumnWidths[2] - (2 * padding));
-        doc.setFontSize(12); 
         doc.text(cellText, xPos + newColumnWidths[2] / 2, yPos + padding + 4, { align: "center", baseline: "middle" });
 
         lineHeight += 10;
-        xPos = 12; // Reset xPos for the new row
+        xPos = 12;
     }
     doc.setFont('helvetica', 'normal');
 }
+
 
 
 drawNewTable();
