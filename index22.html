@@ -196,7 +196,7 @@ function drawNewTable() {
         
         drawCell(xPos, yPos, newColumnWidths[0], 10);
         doc.setFontSize(12); 
-        doc.text(newTableHeader[i], xPos + newColumnWidths[i % 3] / 2, yPos + padding + 4, { align: "center", baseline: "middle" });
+        doc.text(newTableHeader[i], xPos + padding, yPos + padding + 4, { align: "left", baseline: "middle" });
         xPos += newColumnWidths[0] + (2 * padding); // adding padding to x position
 
         drawCell(xPos, yPos, newColumnWidths[1], 10);
