@@ -172,57 +172,6 @@ addSectionTitle("Visit Details");
 addDivider();
 
 
-function drawCell(x, y, w, h) {
-    doc.rect(x, y, w, h);
-}
-
-// New table
-const newTableHeader = ['Diabetes', 'Hypertension', 'H/O TB', 'Blood Thinners', 'H/O Heart Disease', 'Asthama', 'Allergy'];
-
-// Calculate the width of each column in mm
-const totalWidth = 69; // total width of the table
-const padding = 0; // no padding on each side
-const columnWidth = (totalWidth / 3) - (2 * padding); // subtracting padding from each column's width
-const newColumnWidths = [columnWidth + 10, columnWidth - 5, columnWidth - 5];
-
-let medicineTableEnd = 12 + columnWidths.reduce((a, b) => a + b, 0);
-let xPos = medicineTableEnd + 2; // replace 10 with the actual margin you want
-
-function drawNewTable() {
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(12 * 0.7); // Reduced font size by 30%
-    for (let i = 0; i < newTableHeader.length; i++) {
-        let yPos = lineHeight - 6;
-        
-        drawCell(xPos, yPos, newColumnWidths[0], 10);
-        doc.text(newTableHeader[i], xPos + padding + 2, yPos + padding + 4, { align: "left", baseline: "middle" }); // Shifted text 2mm to the right
-        xPos += newColumnWidths[0] + (2 * padding);
-
-        drawCell(xPos, yPos, newColumnWidths[1], 10);
-        if (data.chckPasthistoryofPatient.includes(newTableHeader[i])) {
-            doc.text('X', xPos + newColumnWidths[1] / 2, yPos + padding + 4, { align: "center", baseline: "middle" });
-        }
-        xPos += newColumnWidths[1] + (2 * padding);
-
-        const additionalData = i < 2 ? [data.diabetes, data.bloodPressure][i] : "";
-        drawCell(xPos, yPos, newColumnWidths[2], 10);
-        const cellText = doc.splitTextToSize(additionalData, newColumnWidths[2] - (2 * padding));
-        doc.text(cellText, xPos + newColumnWidths[2] / 2, yPos + padding + 4, { align: "center", baseline: "middle" });
-
-        lineHeight += 10;
-        xPos = medicineTableEnd + 10; // Reset xPos for the new row
-    }
-    doc.setFont('helvetica', 'normal');
-}
-
-
-
-drawNewTable();
-
-// Continue with the rest of the code
-// ...
-
-addDivider();
 // Add medicines
 doc.setFont('helvetica', 'normal');
 doc.setLineWidth(0.5);
@@ -315,6 +264,57 @@ for (let i = 1; i <= 15; i++) {
     }
 }
 
+function drawCell(x, y, w, h) {
+    doc.rect(x, y, w, h);
+}
+
+// New table
+const newTableHeader = ['Diabetes', 'Hypertension', 'H/O TB', 'Blood Thinners', 'H/O Heart Disease', 'Asthama', 'Allergy'];
+
+// Calculate the width of each column in mm
+const totalWidth = 69; // total width of the table
+const padding = 0; // no padding on each side
+const columnWidth = (totalWidth / 3) - (2 * padding); // subtracting padding from each column's width
+const newColumnWidths = [columnWidth + 10, columnWidth - 5, columnWidth - 5];
+
+let medicineTableEnd = 12 + columnWidths.reduce((a, b) => a + b, 0);
+let xPos = medicineTableEnd + 2; // replace 10 with the actual margin you want
+
+function drawNewTable() {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12 * 0.7); // Reduced font size by 30%
+    for (let i = 0; i < newTableHeader.length; i++) {
+        let yPos = lineHeight - 6;
+        
+        drawCell(xPos, yPos, newColumnWidths[0], 10);
+        doc.text(newTableHeader[i], xPos + padding + 2, yPos + padding + 4, { align: "left", baseline: "middle" }); // Shifted text 2mm to the right
+        xPos += newColumnWidths[0] + (2 * padding);
+
+        drawCell(xPos, yPos, newColumnWidths[1], 10);
+        if (data.chckPasthistoryofPatient.includes(newTableHeader[i])) {
+            doc.text('X', xPos + newColumnWidths[1] / 2, yPos + padding + 4, { align: "center", baseline: "middle" });
+        }
+        xPos += newColumnWidths[1] + (2 * padding);
+
+        const additionalData = i < 2 ? [data.diabetes, data.bloodPressure][i] : "";
+        drawCell(xPos, yPos, newColumnWidths[2], 10);
+        const cellText = doc.splitTextToSize(additionalData, newColumnWidths[2] - (2 * padding));
+        doc.text(cellText, xPos + newColumnWidths[2] / 2, yPos + padding + 4, { align: "center", baseline: "middle" });
+
+        lineHeight += 10;
+        xPos = medicineTableEnd + 10; // Reset xPos for the new row
+    }
+    doc.setFont('helvetica', 'normal');
+}
+
+
+
+drawNewTable();
+
+// Continue with the rest of the code
+// ...
+
+addDivider();
 
 
 
