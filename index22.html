@@ -185,8 +185,8 @@ const padding = 0; // no padding on each side
 const columnWidth = (totalWidth / 3) - (2 * padding); // subtracting padding from each column's width
 const newColumnWidths = [columnWidth + 10, columnWidth - 5, columnWidth - 5];
 
-// Starting positions
-let xPos = 12; 
+let medicineTableEnd = 12 + columnWidths.reduce((a, b) => a + b, 0);
+let xPos = medicineTableEnd + 2; // replace 10 with the actual margin you want
 
 function drawNewTable() {
     doc.setFont('helvetica', 'bold');
@@ -210,7 +210,7 @@ function drawNewTable() {
         doc.text(cellText, xPos + newColumnWidths[2] / 2, yPos + padding + 4, { align: "center", baseline: "middle" });
 
         lineHeight += 10;
-        xPos = 12;
+        xPos = medicineTableEnd + 10; // Reset xPos for the new row
     }
     doc.setFont('helvetica', 'normal');
 }
