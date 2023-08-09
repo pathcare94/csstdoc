@@ -268,6 +268,7 @@ function drawCell(x, y, w, h) {
     doc.rect(x, y, w, h);
 }
 let medicineTableEnd = 12 + columnWidths.reduce((a, b) => a + b, 0);
+let medicineHeaderYPos = yPos;  // Capture the yPos of the medicine table's header.
 let xPos = medicineTableEnd + 2; // replace 10 with the actual margin you want
 let initialLineHeight = lineHeight; // save initial line height
 
@@ -287,7 +288,7 @@ function drawNewTable() {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12 * 0.7); // Reduced font size by 30%
     for (let i = 0; i < newTableHeader.length; i++) {
-        let yPos = lineHeight - 6;
+        yPos = medicineHeaderYPos;  // Set the yPos for the new table's header cells.
         
         drawCell(xPos, yPos, newColumnWidths[0], 10);
         doc.text(newTableHeader[i], xPos + padding + 2, yPos + padding + 4, { align: "left", baseline: "middle" }); // Shifted text 2mm to the right
