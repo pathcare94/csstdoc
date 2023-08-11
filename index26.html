@@ -90,7 +90,7 @@ function addHeaderAndFooter() {
         doc.setFontSize(14);
         doc.setFont('helvetica', 'bold');
         doc.text(title, 10, lineHeight);
-        yPos += 10;
+        lineHeight += 10;
     }
 
     function addText(text) {
@@ -126,7 +126,7 @@ let lineHeight = headerHeight + 5;
 doc.setFontSize(12);
 doc.setFont('helvetica', 'normal');
 doc.text(`Visit Date: ${formatDate(data.visitDate)}`, 150, lineHeight);
-yPos += 10;
+lineHeight += 10;
 
 // Add boxes
 const tableWidth = 95; // Table width in mm
@@ -188,7 +188,7 @@ function drawHeader() {
         doc.text(tableHeader[i], xPos + (1), lineHeight + (0.5));
         xPos += columnWidths[i];
     }
-    yPos += 10;
+    lineHeight += 10;
     doc.setFont('helvetica', 'normal');
 }
 
@@ -210,7 +210,8 @@ function drawRow(serial, medicineName, dosage, frequency, timings, meal, duratio
         doc.addPage();
         lineHeight = headerHeight + 5; // reset lineHeight for new page
         addHeaderAndFooter(); // Add header and footer to the new page
-        drawHeader(); // Draw table header on the new page
+        const startingLineHeight = lineHeight;
+drawHeader(); // Draw table header on the new page
     }
     
     for (let i = 0; i < rowData.length; i++) {
@@ -245,6 +246,7 @@ function drawCell(x, y, width, height) {
     doc.rect(x, y, width, height);
 }
 
+const startingLineHeight = lineHeight;
 drawHeader();
 
 for (let i = 1; i <= 15; i++) {
@@ -284,7 +286,7 @@ function drawNewTable() {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12 * 0.7); // Reduced font size by 30%
     for (let i = 0; i < newTableHeader.length; i++) {
-        let yPos = lineHeight - 6;
+        let yPos = startingLineHeight - 6;
         
         drawCell(xPos, yPos, newColumnWidths[0], 10);
         doc.text(newTableHeader[i], xPos + padding + 2, yPos + padding + 4, { align: "left", baseline: "middle" }); // Shifted text 2mm to the right
@@ -301,7 +303,7 @@ function drawNewTable() {
         const cellText = doc.splitTextToSize(additionalData, newColumnWidths[2] - (2 * padding));
         doc.text(cellText, xPos + newColumnWidths[2] / 2, yPos + padding + 4, { align: "center", baseline: "middle" });
 
-        yPos += 10;
+        lineHeight += 10;
         xPos = medicineTableEnd + 10; // Reset xPos for the new row
     }
     doc.setFont('helvetica', 'normal');
