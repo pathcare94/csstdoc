@@ -278,8 +278,7 @@ const columnWidth = (totalWidth / 3) - (2 * padding); // subtracting padding fro
 const newColumnWidths = [columnWidth + 10, columnWidth - 5, columnWidth - 5];
 
 let medicineTableEnd = 12 + columnWidths.reduce((a, b) => a + b, 0);
-let xPos = medicineTableEnd + columnWidths.reduce((a, b) => a + b, 0) + 2;
-
+let xPos = medicineTableEnd + 2; // replace 10 with the actual margin you want
 
 function drawNewTable() {
     doc.setFont('helvetica', 'bold');
