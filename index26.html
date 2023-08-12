@@ -331,7 +331,22 @@ drawNewTable();
 //    addDivider();
     addSectionTitle("Additional Details");
     addText(`Next Visit: ${formatDate(data.nextVisit)}`);
-    addText(`Advised: ${data.selectedTests}`);
+    
+const tests = data.selectedTests.split(","); // Assuming tests are comma-separated
+let advisedText = "Advised: ";
+let currentLine = "";
+
+for (let test of tests) {
+    if (doc.getTextWidth(currentLine + test) > xPos - 12) { // Assuming 12 is the starting xPos for the "Advised" section
+        advisedText += currentLine + "\n";
+        currentLine = test + ",";
+    } else {
+        currentLine += test + ",";
+    }
+}
+advisedText += currentLine; // Add the remaining tests
+addText(advisedText);
+
     addText(`Any Other Remarks: ${data.anyOtherRemarks}`);
     
 
