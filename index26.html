@@ -286,8 +286,9 @@ function drawNewTable() {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12 * 0.7); // Reduced font size by 30%
     
+    let yPos = startingLineHeight - 6; // Set initial yPos outside the loop
+    
     for (let i = 0; i < newTableHeader.length; i++) {
-        let yPos = startingLineHeight - 6;
         
         // First Cell
         drawCell(xPos, yPos, newColumnWidths[0], 10);
@@ -307,11 +308,12 @@ function drawNewTable() {
         const cellText = doc.splitTextToSize(additionalData, newColumnWidths[2] - (2 * padding));
         doc.text(cellText, xPos + newColumnWidths[2] / 2, yPos + padding + 4, { align: "center", baseline: "middle" });
 
-        lineHeight += 10;
+        yPos += 10; // Move down for the next row
         xPos = medicineTableEnd + 2; // Reset xPos for the new row
     }
     doc.setFont('helvetica', 'normal');
 }
+
 
 
 
