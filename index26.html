@@ -172,6 +172,8 @@ addSectionTitle("Visit Details");
 addDivider();
 
 
+let medicinesTableHeight = 0; // Initialize this at the start of your script
+
 // Add medicines
 doc.setFont('helvetica', 'normal');
 doc.setLineWidth(0.5);
@@ -224,6 +226,9 @@ drawHeader(); // Draw table header on the new page
         xPos += columnWidths[i];
     }
     lineHeight += maxRowHeight;
+
+    
+    medicinesTableHeight += maxRowHeight;
 
     // Add additional notes row if notes are present
     if (notes && notes.trim() !== "") {
@@ -319,6 +324,16 @@ function drawNewTable() {
 
 
 drawNewTable();
+const diabetesTableHeight = newTableHeader.length * 10; // Each row is 10 units tall
+
+if (medicinesTableHeight > diabetesTableHeight) {
+    // Here, your logic to draw the divider below the medicines table
+    // For example: drawDivider(medicinesTableEnd);
+} else {
+    // Here, your logic to draw the divider below the diabetes/hypertension table
+    // For example: drawDivider(medicinesTableEnd + diabetesTableHeight);
+}
+
 
 // Continue with the rest of the code
 // ...
@@ -328,7 +343,7 @@ drawNewTable();
 
 
     // Add additional details
-//    addDivider();
+    addDivider();
     addSectionTitle("Additional Details");
     addText(`Next Visit: ${formatDate(data.nextVisit)}`);
     addText(`Advised: ${data.selectedTests}`);
