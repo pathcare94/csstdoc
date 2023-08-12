@@ -285,29 +285,34 @@ let xPos = medicineTableEnd + 2; // replace 10 with the actual margin you want
 function drawNewTable() {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12 * 0.7); // Reduced font size by 30%
+    
     for (let i = 0; i < newTableHeader.length; i++) {
         let yPos = startingLineHeight - 6;
         
+        // First Cell
         drawCell(xPos, yPos, newColumnWidths[0], 10);
         doc.text(newTableHeader[i], xPos + padding + 2, yPos + padding + 4, { align: "left", baseline: "middle" }); // Shifted text 2mm to the right
         xPos += newColumnWidths[0] + (2 * padding);
 
+        // Second Cell
         drawCell(xPos, yPos, newColumnWidths[1], 10);
         if (data.chckPasthistoryofPatient.includes(newTableHeader[i])) {
             doc.text('X', xPos + newColumnWidths[1] / 2, yPos + padding + 4, { align: "center", baseline: "middle" });
         }
         xPos += newColumnWidths[1] + (2 * padding);
 
+        // Third Cell
         const additionalData = i < 2 ? [data.diabetes, data.bloodPressure][i] : "";
         drawCell(xPos, yPos, newColumnWidths[2], 10);
         const cellText = doc.splitTextToSize(additionalData, newColumnWidths[2] - (2 * padding));
         doc.text(cellText, xPos + newColumnWidths[2] / 2, yPos + padding + 4, { align: "center", baseline: "middle" });
 
         lineHeight += 10;
-        xPos = medicineTableEnd + 10; // Reset xPos for the new row
+        xPos = medicineTableEnd + 2; // Reset xPos for the new row
     }
     doc.setFont('helvetica', 'normal');
 }
+
 
 
 
