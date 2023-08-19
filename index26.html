@@ -122,11 +122,13 @@ const wrappedText = doc.splitTextToSize(text, maxLineWidth);
 addHeaderAndFooter();
 let lineHeight = headerHeight + 5;
 
-// Add visit date
-doc.setFontSize(12);
-doc.setFont('helvetica', 'normal');
-doc.text(`Visit Date: ${formatDate(data.visitDate)}`, 150, lineHeight);
-lineHeight += 10;
+    // Add visit date
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`MDR Number: ${data.mdrNumber}`, 150, lineHeight);
+    lineHeight += 10;
+    doc.text(`Visit Date: ${formatDate(data.visitDate)}`, 150, lineHeight);
+    lineHeight += 10;
 
 // Add boxes
 const tableWidth = 95; // Table width in mm
