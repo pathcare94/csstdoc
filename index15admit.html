@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admission Form PDF</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div id="admissionForm"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const studentData = JSON.parse(decodeURIComponent(urlParams.get('studentData')));
+            createPDF(studentData);
+        });
+
+        function createPDF(studentData) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const lineHeight = 10;
+            let linePosition = 10;
+
+            // Define a function to add text lines to the PDF
+            function addLine(text) {
+                doc.text(text, 10, linePosition);
+                linePosition += lineHeight;
+            }
+
+            // Add student data to the PDF
+            addLine(`Student Name: ${studentData.studentName}`);
+            addLine(`Father's Name: ${studentData.fathersName}`);
+            addLine(`Mother's Name: ${studentData.mothersName}`);
+            addLine(`Address: ${studentData.address}`);
+            addLine(`Mobile Number: ${studentData.mobileNumber}`);
+            addLine(`Contact Person: ${studentData.contactPerson}`);
+            addLine(`Referred to Class: ${studentData.referToClass}`);
+            addLine(`Remarks: ${studentData.remarks}`);
+            addLine(`Admission Number: ${studentData.admissionNumber}`);
+
+            // Optionally, add more fields or static text here
+
+            // Save the PDF
+            doc.save('admission-form.pdf');
+        }
+    </script>
+</body>
+</html>
