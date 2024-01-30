@@ -42,20 +42,44 @@
         function createPDF(studentData, includeImages) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            let linePosition = 10;
+            let yPos = 20;
 
             if (includeImages) {
-                // Logic to include images in the PDF
-                // For example, using doc.addImage(...)
+                // Optional: Add school logo here
             }
 
-            // Iterate over each key in the studentData object and add it to the PDF
-            for (const key in studentData) {
-                if (studentData.hasOwnProperty(key)) {
-                    doc.text(`${key}: ${studentData[key]}`, 10, linePosition);
-                    linePosition += 10; // Increment line position for the next entry
-                }
-            }
+            // Header Section
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Admission Form', 105, yPos, null, null, 'center'); // Centered title
+            yPos += 10;
+
+            // Student Information Section
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Student Name: ${studentData.studentName}`, 10, yPos);
+            yPos += 10;
+            // Additional student details...
+
+            // Family Information Section
+            doc.text(`Father's Name: ${studentData.fathersName}`, 10, yPos);
+            yPos += 10;
+            doc.text(`Mother's Name: ${studentData.mothersName}`, 10, yPos);
+            yPos += 10;
+            // Additional family details...
+
+            // Academic Information Section
+            // ...
+
+            // Additional Details
+            doc.text(`Address: ${studentData.address}`, 10, yPos);
+            yPos += 10;
+            // ...
+
+            // Footer Section
+            yPos = 280; // Position at the bottom of the page
+            doc.setFont('helvetica', 'italic');
+            doc.text('Thank you for your application.', 105, yPos, null, null, 'center');
 
             doc.save('admission-form.pdf');
         }
