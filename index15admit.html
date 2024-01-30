@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admission Form PDF</title>
     <style>
-        body {
+          body {
             font-family: Arial, sans-serif;
             font-size: 16px;
         }
@@ -37,11 +37,11 @@
             const studentData = JSON.parse(decodeURIComponent(urlParams.get('studentData')));
 
             document.getElementById("create-pdf").addEventListener("click", function () {
-                createPDF(studentData, true); // true for including images
+                createPDF(studentData, true);
             });
 
             document.getElementById("create-pdf-no-images").addEventListener("click", function () {
-                createPDF(studentData, false); // false for not including images
+                createPDF(studentData, false);
             });
         });
 
@@ -49,7 +49,7 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
-            // Define the header and footer images and their dimensions
+            // Header and footer images
             const headerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1680087506/header1_iibqfp.jpg";
             const footerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1680087505/footer1_uanlwv.jpg";
             const headerAspectRatio = 2481 / 547;
@@ -67,22 +67,27 @@
             }
 
             addHeaderAndFooter();
-            let linePosition = headerHeight + 10;
+            let linePosition = headerHeight + 20;
 
-            // Add student data to the PDF
-            for (const key in studentData) {
-                if (studentData.hasOwnProperty(key)) {
-                    doc.text(`${key}: ${studentData[key]}`, 10, linePosition);
-                    linePosition += 10;
+            // Styling and layout for the form content
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(14);
+            doc.text('Admission Form', 105, linePosition, null, null, 'center');
+            linePosition += 10;
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(12);
+            Object.keys(studentData).forEach(key => {
+                doc.text(`${key}: ${studentData[key]}`, 20, linePosition);
+                linePosition += 8;
+
+                // Check for end of page to add a new page
+                if (linePosition >= (297 - footerHeight - 10)) {
+                    doc.addPage();
+                    addHeaderAndFooter();
+                    linePosition = headerHeight + 20;
                 }
-            }
-
-            // Check for the end of the page and add new page if needed
-            if (linePosition >= (297 - footerHeight)) {
-                doc.addPage();
-                addHeaderAndFooter();
-                linePosition = headerHeight + 10;
-            }
+            });
 
             doc.save('admission-form.pdf');
         }
