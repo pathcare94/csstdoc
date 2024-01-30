@@ -69,28 +69,40 @@
             addHeaderAndFooter();
             let linePosition = headerHeight + 20;
 
-            // Styling and layout for the form content
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(14);
-            doc.text('Admission Form', 105, linePosition, null, null, 'center');
-            linePosition += 10;
+        // Title for the form
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(14);
+        doc.text('Admission Form', 105, linePosition, null, null, 'center');
+        linePosition += 10;
 
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(12);
-            Object.keys(studentData).forEach(key => {
-                doc.text(`${key}: ${studentData[key]}`, 20, linePosition);
+        // Student Data Sections
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'normal');
+        const studentInfoKeys = ['studentName', 'fathersName', 'mothersName', 'address', 'mobileNumber', 'contactPerson', 'referToClass', 'remarks', 'admissionNumber'];
+        studentInfoKeys.forEach(key => {
+            if(studentData[key]) {
+                let label = formatLabel(key);
+                doc.text(`${label}: ${formatData(studentData[key], key)}`, 20, linePosition);
                 linePosition += 8;
+            }
+        });
 
-                // Check for end of page to add a new page
-                if (linePosition >= (297 - footerHeight - 10)) {
-                    doc.addPage();
-                    addHeaderAndFooter();
-                    linePosition = headerHeight + 20;
-                }
-            });
+        // Save the PDF with the admission number as file name
+        let fileName = studentData.admissionNumber ? `${studentData.admissionNumber}.pdf` : 'admission-form.pdf';
+        doc.save(fileName);
+    }
 
-            doc.save('admission-form.pdf');
-        }
-    </script>
+    // Helper function to format label
+    function formatLabel(key) {
+        return key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
+    }
+
+    // Helper function to format data
+    function formatData(data, key) {
+        if (key === 'admissionNumber') return data;
+        if (key === 'mobileNumber') return data.toString();
+        return data;
+    }
+</script>
 </body>
 </html>
