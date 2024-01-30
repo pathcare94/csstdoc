@@ -42,7 +42,6 @@
         function createPDF(studentData, includeImages) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            const lineHeight = 10;
             let linePosition = 10;
 
             if (includeImages) {
@@ -50,14 +49,13 @@
                 // For example, using doc.addImage(...)
             }
 
-            function addLine(text) {
-                doc.text(text, 10, linePosition);
-                linePosition += lineHeight;
+            // Iterate over each key in the studentData object and add it to the PDF
+            for (const key in studentData) {
+                if (studentData.hasOwnProperty(key)) {
+                    doc.text(`${key}: ${studentData[key]}`, 10, linePosition);
+                    linePosition += 10; // Increment line position for the next entry
+                }
             }
-
-            // Add student data to the PDF
-            addLine(`Student Name: ${studentData.studentName}`);
-            // ... Add more lines as needed
 
             doc.save('admission-form.pdf');
         }
