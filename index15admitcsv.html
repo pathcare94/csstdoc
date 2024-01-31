@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission Form CSV Export</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            font-size: 16px;
+            color: white;
+            background-color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <button id="export-csv">Export to CSV</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            document.getElementById("export-csv").addEventListener("click", function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const studentData = JSON.parse(decodeURIComponent(urlParams.get('studentData')));
+                exportToCSV(studentData, "admission_form");
+            });
+        });
+
+        function exportToCSV(studentData, filename) {
+            let csvContent = "data:text/csv;charset=utf-8,";
+
+            // Header
+            let header = Object.keys(studentData).join(",");
+            csvContent += header + "\\r\\n";
+
+            // Data
+            let row = Object.values(studentData).map(value => 
+                (typeof value === 'string' && value.includes(',')) ? `"${value}"` : value
+            ).join(",");
+            csvContent += row + "\\r\\n";
+
+            // Encoding and Download
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", filename + ".csv");
+            document.body.appendChild(link);
+            link.click();
+        }
+    </script>
+</body>
+</html>
