@@ -78,7 +78,8 @@
         // Student Data Sections
         doc.setFontSize(12);
         doc.setFont('helvetica', 'normal');
-        const studentInfoKeys = ['studentName', 'fathersName', 'mothersName', 'address', 'mobileNumber', 'contactPerson', 'referToClass', 'remarks', 'admissionNumber'];
+        const studentInfoKeys = ['studentName', 'fathersName', 'mothersName', 'address', 'mobileNumber', 'contactPerson', 'referToClass', 'remarks', 'admissionNumber', 'enrollmentNumber'];
+
         studentInfoKeys.forEach(key => {
             if(studentData[key]) {
                 let label = formatLabel(key);
