@@ -99,16 +99,12 @@
             startY += 10;
 
             doc.setFontSize(12);
-            doc.text(`Admission Number: ${studentData.admissionNumber || ''}`, 190, startY, null, null, 'right');
+            doc.text(`Admission Number: ${studentData.admissionNumber || ''}`, 20, startY);
 
             startY += 10;
             doc.text(`Enrollment Number: ${studentData.enrollmentNumber || ''}`, 105, startY, null, null, 'center');
 
             startY += 10;
-
-            const headStyles = { fillColor: [220, 220, 220], textColor: [0, 0, 0], fontStyle: 'bold' };
-            const bodyStyles = { fillColor: [0, 0, 0], textColor: [255, 255, 255] };
-            const alternateRowStyles = { fillColor: [240, 240, 240] };
 
             doc.autoTable({
                 startY: startY,
@@ -123,10 +119,7 @@
                     ['Refer To Class', studentData.referToClass || ''],
                     ['Remarks', studentData.remarks || ''],
                 ],
-                theme: 'striped',
-                styles: bodyStyles,
-                headStyles: headStyles,
-                alternateRowStyles: alternateRowStyles,
+                theme: 'grid',
                 tableWidth: 'auto',
             });
 
