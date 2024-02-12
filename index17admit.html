@@ -67,11 +67,28 @@
             }
 
             addHeaderAndFooter();
-            let startY = headerHeight + 10;
+            let startY = headerHeight + 5;
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(12);
+            doc.text('St. Joseph\'s College', 105, startY, null, null, 'center');
+
+            startY += 10; // Space after school name
+
+            const formatDate = (date) => {
+                const d = new Date(date);
+                let day = '' + d.getDate();
+                let month = '' + (d.getMonth() + 1);
+                let year = d.getFullYear();
+
+                if (day.length < 2) day = '0' + day;
+                if (month.length < 2) month = '0' + month;
+
+                return [day, month, year].join('-');
+            };
 
             doc.setFontSize(10);
-            const today = new Date().toISOString().slice(0, 10);
-            doc.text(today, 190, startY, null, null, 'right');
+            doc.text(`Date: ${formatDate(new Date())}`, 190, startY, null, null, 'right');
 
             startY += 10;
 
@@ -82,12 +99,16 @@
             startY += 10;
 
             doc.setFontSize(12);
-            doc.text(`Admission Number: ${studentData.admissionNumber || ''}`, 105, startY, null, null, 'center');
+            doc.text(`Admission Number: ${studentData.admissionNumber || ''}`, 190, startY, null, null, 'right');
 
             startY += 10;
             doc.text(`Enrollment Number: ${studentData.enrollmentNumber || ''}`, 105, startY, null, null, 'center');
 
             startY += 10;
+
+            const headStyles = { fillColor: [220, 220, 220], textColor: [0, 0, 0], fontStyle: 'bold' };
+            const bodyStyles = { fillColor: [0, 0, 0], textColor: [255, 255, 255] };
+            const alternateRowStyles = { fillColor: [240, 240, 240] };
 
             doc.autoTable({
                 startY: startY,
@@ -102,7 +123,10 @@
                     ['Refer To Class', studentData.referToClass || ''],
                     ['Remarks', studentData.remarks || ''],
                 ],
-                theme: 'grid',
+                theme: 'striped',
+                styles: bodyStyles,
+                headStyles: headStyles,
+                alternateRowStyles: alternateRowStyles,
                 tableWidth: 'auto',
             });
 
