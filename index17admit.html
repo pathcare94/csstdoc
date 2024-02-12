@@ -52,12 +52,10 @@
 
             const headerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1680087506/header1_iibqfp.jpg";
             const footerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1680087505/footer1_uanlwv.jpg";
-            const headerAspectRatio = 2481 / 547;
-            const footerAspectRatio = 2481 / 212;
             const headerWidth = 210;
-            const headerHeight = headerWidth / headerAspectRatio;
+            const headerHeight = 25; // Adjusted for custom spacing
             const footerWidth = 210;
-            const footerHeight = footerWidth / footerAspectRatio;
+            const footerHeight = 20; // Adjusted for custom spacing
 
             function addHeaderAndFooter() {
                 if (includeImages) {
@@ -67,27 +65,22 @@
             }
 
             addHeaderAndFooter();
-            let startY = headerHeight + 5;
+            let startY = headerHeight + 10;
 
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(12);
             doc.text('St. Joseph\'s College', 105, startY, null, null, 'center');
 
-            startY += 10; // Space after school name
+            startY += 10;
 
+            doc.setFontSize(10);
             const formatDate = (date) => {
                 const d = new Date(date);
                 let day = '' + d.getDate();
                 let month = '' + (d.getMonth() + 1);
                 let year = d.getFullYear();
-
-                if (day.length < 2) day = '0' + day;
-                if (month.length < 2) month = '0' + month;
-
-                return [day, month, year].join('-');
+                return [day.padStart(2, '0'), month.padStart(2, '0'), year].join('-');
             };
-
-            doc.setFontSize(10);
             doc.text(`Date: ${formatDate(new Date())}`, 190, startY, null, null, 'right');
 
             startY += 10;
@@ -99,10 +92,10 @@
             startY += 10;
 
             doc.setFontSize(12);
-            doc.text(`Admission Number: ${studentData.admissionNumber || ''}`, 20, startY);
+            doc.text(`Admission No.: ${studentData.admissionNumber || ''}`, 105, startY, null, null, 'center');
 
             startY += 10;
-            doc.text(`Enrollment Number: ${studentData.enrollmentNumber || ''}`, 105, startY, null, null, 'center');
+            doc.text(`Enrollment No.: ${studentData.enrollmentNumber || ''}`, 105, startY, null, null, 'center');
 
             startY += 10;
 
@@ -121,13 +114,15 @@
                 ],
                 theme: 'grid',
                 tableWidth: 'auto',
+                headStyles: { fillColor: [233, 236, 239], textColor: [0, 0, 0], fontStyle: 'normal' },
             });
 
-            const finalY = doc.internal.pageSize.height - 30;
+            // Adjustments for evenly spaced and aligned signature lines
+            let signatureStartY = 250; // Adjust based on content
             doc.setFontSize(10);
-            doc.text('Signature of the Parent:', 20, finalY);
-            doc.text('Prepared By:', 105, finalY, null, null, 'center');
-            doc.text('Authorized By:', 190, finalY, null, null, 'right');
+            doc.text('Signature of the Parent:', 20, signatureStartY);
+            doc.text('Prepared By:', 105, signatureStartY, null, null, 'center');
+            doc.text('Authorized By:', 190, signatureStartY, null, null, 'right');
 
             let fileName = studentData.admissionNumber ? `${studentData.admissionNumber}.pdf` : 'admission-form.pdf';
             doc.save(fileName);
