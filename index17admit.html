@@ -88,6 +88,9 @@
                 return [day, month, year].join('-');
             };
 
+// Debug: Log the raw _createdDate value
+console.log("Raw createdDate value:", studentData._createdDate);
+            
             // Use studentData._createdDate for the date on the PDF
             doc.setFontSize(10);
             doc.text(`Date: ${formatDate(studentData._createdDate)}`, 190, startY, null, null, 'right');
