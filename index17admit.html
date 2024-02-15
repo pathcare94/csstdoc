@@ -73,31 +73,15 @@
             doc.setFontSize(12);
             doc.text('St. Joseph\'s College', 105, startY, null, null, 'center');
 
-            startY += 10; // Space after school name
-
-// No need for formatDate function anymore
-doc.text(`Date: ${studentData.createdDate}`, 190, startY, null, null, 'right');
-
-
-
-
-// Ensure we're using the correct property name from studentData for the created date
-// Adjust property access according to how you're passing the date in the URL parameter
-console.log("Formatted createdDate:", formatDate(studentData.createdDate));
-
-            
-            // Use studentData._createdDate for the date on the PDF
-            doc.setFontSize(10);
-            doc.text(`Date: $(studentData._createdDate)`, 190, startY, null, null, 'right');
+            startY += 10; // Correctly display the date received from Wix
+            doc.text(`Date: ${studentData.createdDate}`, 190, startY, null, null, 'right');
 
             startY += 10;
-
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(14);
             doc.text('Admission Form', 105, startY, null, null, 'center');
 
             startY += 10;
-
             doc.setFontSize(12);
             doc.text(`Admission No.: ${studentData.admissionNumber || ''}`, 105, startY, null, null, 'center');
 
@@ -114,7 +98,7 @@ console.log("Formatted createdDate:", formatDate(studentData.createdDate));
                     ['Father\'s Name', studentData.fathersName || ''],
                     ['Mother\'s Name', studentData.mothersName || ''],
                     ['Address', studentData.address || ''],
-                    ['Mobile Number', studentData.mobileNumber || ''],
+                    ['Mobile Number', studentData.mobileNumber.toString() || ''],
                     ['Contact Person', studentData.contactPerson || ''],
                     ['Refer To Class', studentData.referToClass || ''],
                     ['Remarks', studentData.remarks || ''],
