@@ -75,21 +75,24 @@
 
             startY += 10; // Space after school name
 
-            const formatDate = (date) => {
-                if (!date) return ''; // Check for null or undefined date
-                const d = new Date(date);
-                let day = '' + d.getDate();
-                let month = '' + (d.getMonth() + 1);
-                let year = d.getFullYear();
+const formatDate = (date) => {
+    if (!date) return ''; // Check for null or undefined date
+    // Ensure date is parsed correctly from the expected format or directly if already a Date object
+    const d = typeof date === 'string' ? new Date(date) : date;
+    let day = '' + d.getDate();
+    let month = '' + (d.getMonth() + 1);
+    let year = d.getFullYear();
 
-                if (day.length < 2) day = '0' + day;
-                if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+    if (month.length < 2) month = '0' + month;
 
-                return [day, month, year].join('-');
-            };
+    return [day, month, year].join('-');
+};
 
-// Debug: Log the raw _createdDate value
-console.log("Raw createdDate value:", studentData._createdDate);
+// Ensure we're using the correct property name from studentData for the created date
+// Adjust property access according to how you're passing the date in the URL parameter
+console.log("Formatted createdDate:", formatDate(studentData.createdDate));
+
             
             // Use studentData._createdDate for the date on the PDF
             doc.setFontSize(10);
