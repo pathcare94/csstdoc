@@ -88,7 +88,7 @@ console.log("Formatted createdDate:", formatDate(studentData.createdDate));
             
             // Use studentData._createdDate for the date on the PDF
             doc.setFontSize(10);
-            doc.text(`Date: ${formatDate(studentData._createdDate)}`, 190, startY, null, null, 'right');
+            doc.text(`Date: $(studentData._createdDate)`, 190, startY, null, null, 'right');
 
             startY += 10;
 
