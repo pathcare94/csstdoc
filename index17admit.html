@@ -75,12 +75,9 @@
 
             startY += 10; // Space after school name
 
-const formatDate = (isoDateString) => {
-    if (!isoDateString) return ''; // Check for null or undefined date string
-    // Directly manipulate the ISO date string to avoid timezone issues
-    const [year, month, day] = isoDateString.split('-');
-    return `${day}-${month}-${year}`;
-};
+// No need for formatDate function anymore
+doc.text(`Date: ${studentData.createdDate}`, 190, startY, null, null, 'right');
+
 
 
 
