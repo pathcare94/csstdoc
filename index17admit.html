@@ -75,20 +75,13 @@
 
             startY += 10; // Space after school name
 
-// Modified formatDate function to ensure date parsing accounts for different browsers and potential timezone issues.
-const formatDate = (date) => {
-    if (!date) return ''; // Check for null or undefined date
-    // Directly use the date string if provided to avoid timezone conversion issues
-    const dateString = typeof date === 'string' ? date : date.toISOString().substring(0, 10);
-    const d = new Date(dateString);
-    const offset = d.getTimezoneOffset();
-    const correctedDate = new Date(d.getTime() - (offset*60*1000));
-    let day = ('0' + correctedDate.getDate()).slice(-2);
-    let month = ('0' + (correctedDate.getMonth() + 1)).slice(-2);
-    let year = correctedDate.getFullYear();
-
-    return [day, month, year].join('-');
+const formatDate = (isoDateString) => {
+    if (!isoDateString) return ''; // Check for null or undefined date string
+    // Directly manipulate the ISO date string to avoid timezone issues
+    const [year, month, day] = isoDateString.split('-');
+    return `${day}-${month}-${year}`;
 };
+
 
 
 // Ensure we're using the correct property name from studentData for the created date
