@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee Receipt PDF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            font-size: 16px;
+            color: white;
+        }
+        #create-pdf {
+            background-color: #4CAF50;
+        }
+        #create-pdf-no-images {
+            background-color: #2196F3;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <button id="create-pdf">Create PDF</button>
+    <button id="create-pdf-no-images">Create PDF (No Images)</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const feeReceiptData = JSON.parse(decodeURIComponent(urlParams.get('feeReceiptData')));
+
+            document.getElementById("create-pdf").addEventListener("click", function () {
+                createPDF(feeReceiptData, true);
+            });
+
+            document.getElementById("create-pdf-no-images").addEventListener("click", function () {
+                createPDF(feeReceiptData, false);
+            });
+        });
+
+        function createPDF(feeReceiptData, includeImages) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            const headerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1680087506/header1_iibqfp.jpg";
+            const footerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1680087505/footer1_uanlwv.jpg";
+            const headerAspectRatio = 2481 / 547;
+            const footerAspectRatio = 2481 / 212;
+            const headerWidth = 210; // A4 page width in mm
+            const headerHeight = headerWidth / headerAspectRatio;
+            const footerWidth = 210; // A4 page width in mm
+            const footerHeight = footerWidth / footerAspectRatio;
+
+            function addHeaderAndFooter() {
+                if (includeImages) {
+                    doc.addImage(headerImageUrl, 'PNG', 0, 0, headerWidth, headerHeight);
+                    doc.addImage(footerImageUrl, 'PNG', 0, 297 - footerHeight, footerWidth, footerHeight);
+                }
+            }
+
+            addHeaderAndFooter();
+            let startY = headerHeight + 5;
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(12);
+            doc.text('Fee Receipt', 105, startY, null, null, 'center');
+
+            startY += 10;
+            doc.setFontSize(10);
+            doc.text(`Date: ${new Date().toLocaleDateString()}`, 190, startY, null, null, 'right');
+
+            startY += 5;
+            doc.autoTable({
+                startY: startY,
+                head: [['Field', 'Information']],
+                body: [
+                    ['Student Name', feeReceiptData.studentName || ''],
+                    ['Father\'s Name', feeReceiptData.fathersName || ''],
+                    ['Mother\'s Name', feeReceiptData.mothersName || ''],
+                    ['Enrollment Number', feeReceiptData.enrollmentNumber || ''],
+                    ['Date', feeReceiptData.date || ''],
+                    ['Refer To Class', feeReceiptData.referToClass || ''],
+                    ['Fee Composite', feeReceiptData.feeComposite || ''],
+                    ['Conveyance', feeReceiptData.conveyance || ''],
+                    ['Others', feeReceiptData.others || ''],
+                    ['Base Amount', feeReceiptData.baseAmount || ''],
+                    ['Other Charges', feeReceiptData.otherCharges || ''],
+                    ['Discount', feeReceiptData.discount || ''],
+                    ['Final Amount', feeReceiptData.finalAmount || ''],
+                    ['Amount Received', feeReceiptData.amountReceived || ''],
+                    ['Remarks', feeReceiptData.remarks || ''],
+                    ['Receipt Number', feeReceiptData.receiptNumber || ''],
+                ],
+                theme: 'grid',
+                tableWidth: 'auto',
+            });
+
+            const finalY = doc.internal.pageSize.height - 30;
+            doc.setFontSize(10);
+            doc.text('Signature of the Parent/Guardian:', 20, finalY);
+            doc.text('Prepared By:', 105, finalY, null, null, 'center');
+            doc.text('Authorized Signature:', 190, finalY, null, null, 'right');
+
+            let fileName = feeReceiptData.receiptNumber ? `${feeReceiptData.receiptNumber}.pdf` : 'fee-receipt.pdf';
+            doc.save(fileName);
+        }
+    </script>
+</body>
+</html>
