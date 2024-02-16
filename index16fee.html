@@ -46,8 +46,9 @@
             });
         });
 
-        function formatCurrency(value) {
-            return '₹' + Number(value).toLocaleString('en-IN', {
+        function formatNumber(value) {
+            // Format without currency symbol and ensure compact number formatting
+            return Number(value).toLocaleString('en-IN', {
                 maximumFractionDigits: 2,
                 minimumFractionDigits: 2
             });
@@ -100,14 +101,14 @@
                     ['Father\'s Name', feeReceiptData.fathersName || ''],
                     ['Mother\'s Name', feeReceiptData.mothersName || ''],
                     ['Refer To Class', feeReceiptData.referToClass || ''],
-                    ['Fee Composite', formatCurrency(feeReceiptData.feeComposite)],
-                    ['Conveyance', formatCurrency(feeReceiptData.conveyance)],
-                    ['Others', formatCurrency(feeReceiptData.others)],
-                    ['Base Amount', formatCurrency(feeReceiptData.baseAmount)],
-                    ['Other Charges', formatCurrency(feeReceiptData.otherCharges)],
-                    ['Discount', formatCurrency(feeReceiptData.discount)],
-                    ['Final Amount', formatCurrency(feeReceiptData.finalAmount)],
-                    ['Amount Received', formatCurrency(feeReceiptData.amountReceived)],
+                    ['Fee Composite', formatNumber(feeReceiptData.feeComposite)],
+                    ['Conveyance', formatNumber(feeReceiptData.conveyance)],
+                    ['Others', formatNumber(feeReceiptData.others)],
+                    ['Base Amount', formatNumber(feeReceiptData.baseAmount)],
+                    ['Other Charges', formatNumber(feeReceiptData.otherCharges)],
+                    ['Discount', formatNumber(feeReceiptData.discount)],
+                    ['Final Amount', formatNumber(feeReceiptData.finalAmount)],
+                    ['Amount Received', formatNumber(feeReceiptData.amountReceived)],
                     ['Remarks', feeReceiptData.remarks || ''],
                 ],
                 theme: 'grid',
