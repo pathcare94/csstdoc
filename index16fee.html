@@ -47,7 +47,6 @@
         });
 
         function formatNumber(value) {
-            // Format without currency symbol and ensure compact number formatting
             return Number(value).toLocaleString('en-IN', {
                 maximumFractionDigits: 2,
                 minimumFractionDigits: 2
@@ -92,6 +91,7 @@
             startY += 5;
             doc.text(`Enrollment No.: ${feeReceiptData.enrollmentNumber || ''}`, 105, startY, null, null, 'center');
 
+            // Student Data Table
             startY += 10;
             doc.autoTable({
                 startY: startY,
@@ -101,6 +101,22 @@
                     ['Father\'s Name', feeReceiptData.fathersName || ''],
                     ['Mother\'s Name', feeReceiptData.mothersName || ''],
                     ['Refer To Class', feeReceiptData.referToClass || ''],
+                    ['Address', feeReceiptData.address || ''],
+                    ['Mobile Number', feeReceiptData.mobileNumber.toString() || ''],
+                    ['Contact Person', feeReceiptData.contactPerson || ''],
+                    ['Remarks', feeReceiptData.remarks || ''],
+                ],
+                theme: 'grid',
+                tableWidth: 'auto',
+            });
+
+            let feeDetailsStartY = doc.lastAutoTable.finalY + 10;
+
+            // Fee Details Table
+            doc.autoTable({
+                startY: feeDetailsStartY,
+                head: [['Field', 'Amount']],
+                body: [
                     ['Fee Composite', formatNumber(feeReceiptData.feeComposite)],
                     ['Conveyance', formatNumber(feeReceiptData.conveyance)],
                     ['Others', formatNumber(feeReceiptData.others)],
@@ -109,11 +125,10 @@
                     ['Discount', formatNumber(feeReceiptData.discount)],
                     ['Final Amount', formatNumber(feeReceiptData.finalAmount)],
                     ['Amount Received', formatNumber(feeReceiptData.amountReceived)],
-                    ['Remarks', feeReceiptData.remarks || ''],
                 ],
                 theme: 'grid',
                 tableWidth: 'auto',
-                columnStyles: { 1: { halign: 'right' } }, // Right align the second column
+                columnStyles: { 1: { halign: 'right' } }, // Right align the second column in fee details table
             });
 
             const finalY = doc.internal.pageSize.height - 30;
