@@ -78,6 +78,13 @@
             doc.text(`Date: ${new Date().toLocaleDateString()}`, 190, startY, null, null, 'right');
 
             startY += 5;
+            doc.setFontSize(12);
+            doc.text(`Fee Receipt No.: ${feeReceiptData.receiptNumber || ''}`, 105, startY, null, null, 'center');
+
+            startY += 5;
+            doc.text(`Enrollment No.: ${feeReceiptData.enrollmentNumber || ''}`, 105, startY, null, null, 'center');
+
+            startY += 10;
             doc.autoTable({
                 startY: startY,
                 head: [['Field', 'Information']],
@@ -85,19 +92,16 @@
                     ['Student Name', feeReceiptData.studentName || ''],
                     ['Father\'s Name', feeReceiptData.fathersName || ''],
                     ['Mother\'s Name', feeReceiptData.mothersName || ''],
-                    ['Enrollment Number', feeReceiptData.enrollmentNumber || ''],
-                    ['Date', feeReceiptData.date || ''],
                     ['Refer To Class', feeReceiptData.referToClass || ''],
-                    ['Fee Composite', feeReceiptData.feeComposite || ''],
-                    ['Conveyance', feeReceiptData.conveyance || ''],
-                    ['Others', feeReceiptData.others || ''],
-                    ['Base Amount', feeReceiptData.baseAmount || ''],
-                    ['Other Charges', feeReceiptData.otherCharges || ''],
-                    ['Discount', feeReceiptData.discount || ''],
-                    ['Final Amount', feeReceiptData.finalAmount || ''],
-                    ['Amount Received', feeReceiptData.amountReceived || ''],
+                    ['Fee Composite', feeReceiptData.feeComposite.toString() || ''],
+                    ['Conveyance', feeReceiptData.conveyance.toString() || ''],
+                    ['Others', feeReceiptData.others.toString() || ''],
+                    ['Base Amount', feeReceiptData.baseAmount.toString() || ''],
+                    ['Other Charges', feeReceiptData.otherCharges.toString() || ''],
+                    ['Discount', feeReceiptData.discount.toString() || ''],
+                    ['Final Amount', feeReceiptData.finalAmount.toString() || ''],
+                    ['Amount Received', feeReceiptData.amountReceived.toString() || ''],
                     ['Remarks', feeReceiptData.remarks || ''],
-                    ['Receipt Number', feeReceiptData.receiptNumber || ''],
                 ],
                 theme: 'grid',
                 tableWidth: 'auto',
