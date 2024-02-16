@@ -24,13 +24,6 @@
         #create-pdf-no-images {
             background-color: #2196F3;
         }
-        .highlight {
-            font-weight: bold;
-            font-size: 14px; /* Slightly larger to stand out */
-        }
-        .right-align {
-            text-align: right; /* Right align for numerical values */
-        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
@@ -52,6 +45,13 @@
                 createPDF(feeReceiptData, false);
             });
         });
+
+        function formatCurrency(value) {
+            return '₹' + Number(value).toLocaleString('en-IN', {
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2
+            });
+        }
 
         function createPDF(feeReceiptData, includeImages) {
             const { jsPDF } = window.jspdf;
@@ -85,18 +85,13 @@
             doc.text(`Date: ${new Date().toLocaleDateString()}`, 190, startY, null, null, 'right');
 
             startY += 5;
-            doc.setFontSize(14); // Slightly larger font for headers
+            doc.setFontSize(12);
             doc.text(`Fee Receipt No.: ${feeReceiptData.receiptNumber || ''}`, 105, startY, null, null, 'center');
 
             startY += 5;
             doc.text(`Enrollment No.: ${feeReceiptData.enrollmentNumber || ''}`, 105, startY, null, null, 'center');
 
             startY += 10;
-            const bodyStyles = {minCellHeight: 9};
-            const columnStyles = {
-                0: {cellWidth: 88}, // Adjust column width for content
-                1: {cellWidth: 88, halign: 'right'}, // Right align and set width for numerical values
-            };
             doc.autoTable({
                 startY: startY,
                 head: [['Field', 'Information']],
@@ -105,20 +100,19 @@
                     ['Father\'s Name', feeReceiptData.fathersName || ''],
                     ['Mother\'s Name', feeReceiptData.mothersName || ''],
                     ['Refer To Class', feeReceiptData.referToClass || ''],
-                    ['Fee Composite', `₹${feeReceiptData.feeComposite.toFixed(2)}` || ''],
-                    ['Conveyance', `₹${feeReceiptData.conveyance.toFixed(2)}` || ''],
-                    ['Others', `₹${feeReceiptData.others.toFixed(2)}` || ''],
-                    ['Base Amount', `₹${feeReceiptData.baseAmount.toFixed(2)}` || ''],
-                    ['Other Charges', `₹${feeReceiptData.otherCharges.toFixed(2)}` || ''],
-                    ['Discount', `₹${feeReceiptData.discount.toFixed(2)}` || ''],
-                    ['Final Amount', `₹${feeReceiptData.finalAmount.toFixed(2)}` || ''],
-                    ['Amount Received', `₹${feeReceiptData.amountReceived.toFixed(2)}` || ''],
+                    ['Fee Composite', formatCurrency(feeReceiptData.feeComposite)],
+                    ['Conveyance', formatCurrency(feeReceiptData.conveyance)],
+                    ['Others', formatCurrency(feeReceiptData.others)],
+                    ['Base Amount', formatCurrency(feeReceiptData.baseAmount)],
+                    ['Other Charges', formatCurrency(feeReceiptData.otherCharges)],
+                    ['Discount', formatCurrency(feeReceiptData.discount)],
+                    ['Final Amount', formatCurrency(feeReceiptData.finalAmount)],
+                    ['Amount Received', formatCurrency(feeReceiptData.amountReceived)],
                     ['Remarks', feeReceiptData.remarks || ''],
                 ],
                 theme: 'grid',
                 tableWidth: 'auto',
-                styles: bodyStyles,
-                columnStyles: columnStyles
+                columnStyles: { 1: { halign: 'right' } }, // Right align the second column
             });
 
             const finalY = doc.internal.pageSize.height - 30;
