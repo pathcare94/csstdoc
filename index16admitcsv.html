@@ -35,16 +35,14 @@
 
         function exportToCSV(reportData, filename) {
             let csvContent = "data:text/csv;charset=utf-8,";
-
-            // Assuming reportData is an array of objects
             const headers = Object.keys(reportData[0]).join(",");
-            csvContent += headers + "\\r\\n";
+            csvContent += headers + "\r\n";
 
             reportData.forEach(row => {
                 const rowData = Object.values(row).map(value => 
                     (typeof value === 'string' && value.includes(',')) ? `"${value}"` : value
                 ).join(",");
-                csvContent += rowData + "\\r\\n";
+                csvContent += rowData + "\r\n";
             });
 
             const encodedUri = encodeURI(csvContent);
