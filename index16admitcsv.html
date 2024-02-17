@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report CSV Export</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            font-size: 16px;
+            color: white;
+            background-color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <button id="export-csv">Export to CSV</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            document.getElementById("export-csv").addEventListener("click", function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const reportData = JSON.parse(decodeURIComponent(urlParams.get('data')));
+                exportToCSV(reportData, "report_data");
+            });
+        });
+
+        function exportToCSV(reportData, filename) {
+            let csvContent = "data:text/csv;charset=utf-8,";
+
+            // Assuming reportData is an array of objects
+            const headers = Object.keys(reportData[0]).join(",");
+            csvContent += headers + "\\r\\n";
+
+            reportData.forEach(row => {
+                const rowData = Object.values(row).map(value => 
+                    (typeof value === 'string' && value.includes(',')) ? `"${value}"` : value
+                ).join(",");
+                csvContent += rowData + "\\r\\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", filename + ".csv");
+            document.body.appendChild(link);
+            link.click();
+        }
+    </script>
+</body>
+</html>
