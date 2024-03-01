@@ -55,21 +55,25 @@
 
         function createPDF(feeReceiptData, includeImages) {
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+            const doc = new jsPDF({
+                orientation: 'p',
+                unit: 'mm',
+                format: 'a5'
+            });
 
             const headerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1680087506/header1_iibqfp.jpg";
             const footerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1680087505/footer1_uanlwv.jpg";
             const headerAspectRatio = 2481 / 547;
             const footerAspectRatio = 2481 / 212;
-            const headerWidth = 210; // A4 page width in mm
+            const headerWidth = 148; // A5 page width in mm
             const headerHeight = headerWidth / headerAspectRatio;
-            const footerWidth = 210; // A4 page width in mm
+            const footerWidth = 148; // A5 page width in mm
             const footerHeight = footerWidth / footerAspectRatio;
 
             function addHeaderAndFooter() {
                 if (includeImages) {
                     doc.addImage(headerImageUrl, 'PNG', 0, 0, headerWidth, headerHeight);
-                    doc.addImage(footerImageUrl, 'PNG', 0, 297 - footerHeight, footerWidth, footerHeight);
+                    doc.addImage(footerImageUrl, 'PNG', 0, 210 - footerHeight, footerWidth, footerHeight);
                 }
             }
 
@@ -82,7 +86,7 @@
 
             startY += 10;
             doc.setFontSize(10);
-            doc.text(`Date: ${new Date().toLocaleDateString()}`, 190, startY, null, null, 'right');
+            doc.text(`Date: ${new Date().toLocaleDateString()}`, 105, startY, null, null, 'right');
 
             startY += 5;
             doc.setFontSize(12);
@@ -98,13 +102,7 @@
                 head: [['Field', 'Information']],
                 body: [
                     ['Student Name', feeReceiptData.studentName || ''],
-                    ['Father\'s Name', feeReceiptData.fathersName || ''],
-                    ['Mother\'s Name', feeReceiptData.mothersName || ''],
-                    ['Refer To Class', feeReceiptData.referToClass || ''],
-                    ['Address', feeReceiptData.address || ''],
-                    ['Mobile Number', feeReceiptData.mobileNumber.toString() || ''],
-                    ['Contact Person', feeReceiptData.contactPerson || ''],
-                    ['Remarks', feeReceiptData.remarks || ''],
+                    ['Refer To Class', feeReceiptData.referToClass || '']
                 ],
                 theme: 'grid',
                 tableWidth: 'auto',
@@ -128,7 +126,7 @@
                 ],
                 theme: 'grid',
                 tableWidth: 'auto',
-                columnStyles: { 1: { halign: 'right' } }, // Right align the second column in fee details table
+                columnStyles: { 1: { halign: 'right' } },
             });
 
             const finalY = doc.internal.pageSize.height - 30;
