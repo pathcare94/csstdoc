@@ -132,13 +132,14 @@
                 columnStyles: { 1: { halign: 'right' } },
             });
 
-            // Adjusting the space for signatures at the bottom
-            const finalY = doc.internal.pageSize.getHeight() - 20; // Adjusted for better fit within A5
-            const signatureSpace = pageCenter / 2; // Reducing the space between signature texts by 80%
-            doc.setFontSize(10);
-            doc.text('Signature of the Parent:', signatureSpace * 0.5, finalY);
-            doc.text('Prepared By:', pageCenter, finalY, null, null, 'center');
-            doc.text('Authorized Signature:', signatureSpace * 1.5, finalY, 'right');
+const finalY = doc.internal.pageSize.getHeight() - 20; // Adjusted for better fit within A5
+
+// Setting explicit positions for each signature to prevent overlap
+doc.setFontSize(10);
+doc.text('Signature of the Parent:', 10, finalY); // Position towards the left
+doc.text('Prepared By:', 62, finalY, null, null, 'center'); // Centered, adjust position as needed
+doc.text('Authorized Signature:', 120, finalY); // Position towards the right
+
 
             let fileName = feeReceiptData.receiptNumber ? `${feeReceiptData.receiptNumber}.pdf` : 'fee-receipt.pdf';
             doc.save(fileName);
