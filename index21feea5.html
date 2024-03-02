@@ -134,11 +134,16 @@
 
 const finalY = doc.internal.pageSize.getHeight() - 20; // Adjusted for better fit within A5
 
-// Setting explicit positions for each signature to prevent overlap
+// Calculate positions to evenly distribute the signatures across the page
+const firstSignatureX = 10; // Starting a little from the left to avoid the very edge
+const secondSignatureX = (doc.internal.pageSize.getWidth() / 3) + firstSignatureX; // One third into the page plus a bit for margin
+const thirdSignatureX = (secondSignatureX * 2) - firstSignatureX; // Two thirds into the page, adjusted for initial offset
+
 doc.setFontSize(10);
-doc.text('Signature of the Parent:', 10, finalY); // Position towards the left
-doc.text('Prepared By:', 62, finalY, null, null, 'center'); // Centered, adjust position as needed
-doc.text('Authorized Signature:', 120, finalY); // Position towards the right
+doc.text('Signature of the Parent:', firstSignatureX, finalY); // Left
+doc.text('Prepared By:', secondSignatureX, finalY, null, null, 'center'); // Middle
+doc.text('Authorized Signature:', thirdSignatureX, finalY); // Right
+
 
 
             let fileName = feeReceiptData.receiptNumber ? `${feeReceiptData.receiptNumber}.pdf` : 'fee-receipt.pdf';
