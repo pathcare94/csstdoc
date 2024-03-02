@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee Receipt PDF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            font-size: 16px;
+            color: white;
+        }
+        #create-pdf {
+            background-color: #4CAF50;
+        }
+        #create-pdf-no-images {
+            background-color: #2196F3;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <button id="create-pdf">Create PDF</button>
+    <button id="create-pdf-no-images">Create PDF (No Images)</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const feeReceiptData = JSON.parse(decodeURIComponent(urlParams.get('feeReceiptData')));
+
+            document.getElementById("create-pdf").addEventListener("click", function () {
+                createPDF(feeReceiptData, true);
+            });
+
+            document.getElementById("create-pdf-no-images").addEventListener("click", function () {
+                createPDF(feeReceiptData, false);
+            });
+        });
+
+        function formatNumber(value) {
+            return Number(value).toLocaleString('en-IN', {
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2
+            });
+        }
+
+        function createPDF(feeReceiptData, includeImages) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({
+                orientation: 'p',
+                unit: 'mm',
+                format: 'a5'
+            });
+
+            const headerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1680087506/header1_iibqfp.jpg";
+            const footerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1680087505/footer1_uanlwv.jpg";
+            const headerAspectRatio = 2481 / 547;
+            const footerAspectRatio = 2481 / 212;
+            const headerWidth = 148; // A5 page width in mm
+            const headerHeight = headerWidth / headerAspectRatio;
+            const footerWidth = 148; // A5 page width in mm
+            const footerHeight = footerWidth / footerAspectRatio;
+
+            function addHeaderAndFooter() {
+                if (includeImages) {
+                    doc.addImage(headerImageUrl, 'PNG', 0, 0, headerWidth, headerHeight);
+                    doc.addImage(footerImageUrl, 'PNG', 0, 210 - footerHeight, footerWidth, footerHeight);
+                }
+            }
+
+            addHeaderAndFooter();
+            let startY = headerHeight + 5;
+
+            // Centering the headings correctly on A5 page
+            const pageCenter = doc.internal.pageSize.getWidth() / 2;
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(12);
+            doc.text('Fee Receipt', pageCenter, startY, null, null, 'center');
+
+            startY += 10;
+            doc.setFontSize(10);
+            doc.text(`Date: ${new Date().toLocaleDateString()}`, pageCenter, startY, null, null, 'center');
+
+            startY += 5;
+            doc.setFontSize(12);
+            doc.text(`Fee Receipt No.: ${feeReceiptData.receiptNumber || ''}`, pageCenter, startY, null, null, 'center');
+
+            startY += 5;
+            doc.text(`Enrollment No.: ${feeReceiptData.enrollmentNumber || ''}`, pageCenter, startY, null, null, 'center');
+
+            // Student Data Table
+            startY += 10;
+            doc.autoTable({
+                startY: startY,
+                head: [['Field', 'Information']],
+                body: [
+                    ['Student Name', feeReceiptData.studentName || ''],
+                    ['Refer To Class', feeReceiptData.referToClass || '']
+                ],
+                theme: 'grid',
+                tableWidth: 'auto',
+            });
+
+            let feeDetailsStartY = doc.lastAutoTable.finalY + 10;
+
+            // Fee Details Table
+            doc.autoTable({
+                startY: feeDetailsStartY,
+                head: [['Field', 'Amount']],
+                body: [
+                    ['Fee Composite', formatNumber(feeReceiptData.feeComposite)],
+                    ['Conveyance', formatNumber(feeReceiptData.conveyance)],
+                    ['Others', formatNumber(feeReceiptData.others)],
+                    ['Base Amount', formatNumber(feeReceiptData.baseAmount)],
+                    ['Other Charges', formatNumber(feeReceiptData.otherCharges)],
+                    ['Discount', formatNumber(feeReceiptData.discount)],
+                    ['Final Amount', formatNumber(feeReceiptData.finalAmount)],
+                    ['Amount Received', formatNumber(feeReceiptData.amountReceived)],
+                ],
+                theme: 'grid',
+                tableWidth: 'auto',
+                columnStyles: { 1: { halign: 'right' } },
+            });
+
+            // Adjusting the space for signatures at the bottom
+            const finalY = doc.internal.pageSize.getHeight() - 20; // Adjusted for better fit within A5
+            const signatureSpace = pageCenter / 2; // Reducing the space between signature texts by 80%
+            doc.setFontSize(10);
+            doc.text('Signature of the Parent:', signatureSpace * 0.5, finalY);
+            doc.text('Prepared By:', pageCenter, finalY, null, null, 'center');
+            doc.text('Authorized Signature:', signatureSpace * 1.5, finalY, 'right');
+
+            let fileName = feeReceiptData.receiptNumber ? `${feeReceiptData.receiptNumber}.pdf` : 'fee-receipt.pdf';
+            doc.save(fileName);
+        }
+    </script>
+</body>
+</html>
