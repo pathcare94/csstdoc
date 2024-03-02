@@ -134,15 +134,34 @@
 
 const finalY = doc.internal.pageSize.getHeight() - 20; // Adjusted for better fit within A5
 
-// Calculate positions to evenly distribute the signatures across the page
-const firstSignatureX = 10; // Starting a little from the left to avoid the very edge
-const secondSignatureX = (doc.internal.pageSize.getWidth() / 3) + firstSignatureX; // One third into the page plus a bit for margin
-const thirdSignatureX = (secondSignatureX * 2) - firstSignatureX; // Two thirds into the page, adjusted for initial offset
+// Text blocks
+const texts = ['Signature of the Parent:', 'Prepared By:', 'Authorized Signature:'];
 
+// Assuming an average character width for the current font and size
+// This is a rough estimation; for precise control, you'd need the actual widths
+const avgCharWidth = 2; // Average character width in mm
+const padding = 5; // Additional padding between texts
+
+// Calculate total width of each text block including padding
+const totalWidths = texts.map(text => (text.length * avgCharWidth) + padding);
+
+// Calculate starting X positions based on total widths
+let startX = (doc.internal.pageSize.getWidth() - totalWidths.reduce((a, b) => a + b, -padding)) / 2; // Start so total widths are centered
+
+const positions = totalWidths.map(width => {
+    const position = startX;
+    startX += width; // Update startX for the next text block
+    return position;
+});
+
+// Set font size once for all texts
 doc.setFontSize(10);
-doc.text('Signature of the Parent:', firstSignatureX, finalY); // Left
-doc.text('Prepared By:', secondSignatureX, finalY, null, null, 'center'); // Middle
-doc.text('Authorized Signature:', thirdSignatureX, finalY); // Right
+
+// Place each text block at its calculated position
+doc.text(texts[0], positions[0], finalY); // "Signature of the Parent:"
+doc.text(texts[1], positions[1], finalY, null, null, 'center'); // "Prepared By:"
+doc.text(texts[2], positions[2], finalY); // "Authorized Signature:"
+
 
 
 
