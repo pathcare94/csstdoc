@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admission Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            border: 1px solid #000;
+            padding: 20px;
+        }
+        .heading {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .field {
+            margin-bottom: 10px;
+        }
+        .label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heading">Admission Form</div>
+        <div class="field">
+            <span class="label">Student Name:</span> <span id="studentName"></span>
+        </div>
+        <div class="field">
+            <span class="label">Father's Name:</span> <span id="fathersName"></span>
+        </div>
+        <div class="field">
+            <span class="label">Mother's Name:</span> <span id="mothersName"></span>
+        </div>
+        <div class="field">
+            <span class="label">Address:</span> <span id="address"></span>
+        </div>
+        <div class="field">
+            <span class="label">Local Address:</span> <span id="localAddress"></span>
+        </div>
+        <div class="field">
+            <span class="label">Gender:</span> <span id="gender"></span>
+        </div>
+        <div class="field">
+            <span class="label">Date of Birth:</span> <span id="dateOfBirth"></span>
+        </div>
+        <div class="field">
+            <span class="label">Mobile Number:</span> <span id="mobileNumber"></span>
+        </div>
+        <div class="field">
+            <span class="label">Alternate Number:</span> <span id="alternateNumber"></span>
+        </div>
+        <div class="field">
+            <span class="label">Contact Person:</span> <span id="contactPerson"></span>
+        </div>
+        <div class="field">
+            <span class="label">Refer to Class:</span> <span id="referToClass"></span>
+        </div>
+        <div class="field">
+            <span class="label">Remarks:</span> <span id="remarks"></span>
+        </div>
+        <div class="field">
+            <span class="label">TC Provided:</span> <span id="tc"></span>
+        </div>
+        <div class="field">
+            <span class="label">Birth Certificate Provided:</span> <span id="birthCertificate"></span>
+        </div>
+        <div class="field">
+            <span class="label">Aadhar Number:</span> <span id="aadharNumber"></span>
+        </div>
+        <div class="field">
+            <span class="label">Belong to Minority Community:</span> <span id="doYouBelongToMinorityCommunity"></span>
+        </div>
+        <div class="field">
+            <span class="label">Physically Challenged:</span> <span id="areYouPhysicallyChallenged"></span>
+        </div>
+        <div class="field">
+            <span class="label">Mother's Qualification:</span> <span id="mothersQualification"></span>
+        </div>
+        <div class="field">
+            <span class="label">Mother's Income:</span> <span id="mothersIncome"></span>
+        </div>
+        <div class="field">
+            <span class="label">Mother's Profession:</span> <span id="mothersProfession"></span>
+        </div>
+        <div class="field">
+            <span class="label">Father's Qualification:</span> <span id="fathersQualification"></span>
+        </div>
+        <div class="field">
+            <span class="label">Father's Income:</span> <span id="fathersIncome"></span>
+        </div>
+        <div class="field">
+            <span class="label">Father's Profession:</span> <span id="fathersProfession"></span>
+        </div>
+        <div class="field">
+            <span class="label">Nationality:</span> <span id="nationality"></span>
+        </div>
+        <div class="field">
+            <span class="label">Religion:</span> <span id="religion"></span>
+        </div>
+        <div class="field">
+            <span class="label">Category:</span> <span id="category"></span>
+        </div>
+        <div class="field">
+            <span class="label">Last School Attended:</span> <span id="lastSchoolAttended"></span>
+        </div>
+        <div class="field">
+            <span class="label">Sibling in School:</span> <span id="nameOfBrotherSisterStudyiongInTheSchool"></span>
+        </div>
+        <div class="field">
+            <span class="label">Sibling Class:</span> <span id="siblingClass"></span>
+        </div>
+        <div class="field">
+            <span class="label">Enrollment Number:</span> <span id="enrollmentNumber"></span>
+        </div>
+        <div class="field">
+            <span class="label">Admission Number:</span> <span id="admissionNumber"></span>
+        </div>
+        <div class="field">
+            <span class="label">Created Date:</span> <span id="createdDate"></span>
+        </div>
+    </div>
+    <script>
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            const studentData = JSON.parse(decodeURIComponent(params.get('studentData')));
+            
+            for (const key in studentData) {
+                if (studentData.hasOwnProperty(key) && document.getElementById(key)) {
+                    document.getElementById(key).textContent = studentData[key];
+                }
+            }
+        };
+    </script>
+</body>
+</html>
