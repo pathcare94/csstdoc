@@ -1,142 +1,142 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Admission Form</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission Form PDF</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            font-size: 16px;
         }
-        .container {
-            width: 80%;
-            margin: auto;
-            border: 1px solid #000;
-            padding: 20px;
-        }
-        .heading {
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        .field {
+        button {
+            padding: 10px 20px;
             margin-bottom: 10px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            font-size: 16px;
+            color: white;
         }
-        .label {
-            font-weight: bold;
+        #create-pdf {
+            background-color: #4CAF50;
+        }
+        #create-pdf-no-images {
+            background-color: #2196F3;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="heading">Admission Form</div>
-        <div class="field">
-            <span class="label">Student Name:</span> <span id="studentName"></span>
-        </div>
-        <div class="field">
-            <span class="label">Father's Name:</span> <span id="fathersName"></span>
-        </div>
-        <div class="field">
-            <span class="label">Mother's Name:</span> <span id="mothersName"></span>
-        </div>
-        <div class="field">
-            <span class="label">Address:</span> <span id="address"></span>
-        </div>
-        <div class="field">
-            <span class="label">Local Address:</span> <span id="localAddress"></span>
-        </div>
-        <div class="field">
-            <span class="label">Gender:</span> <span id="gender"></span>
-        </div>
-        <div class="field">
-            <span class="label">Date of Birth:</span> <span id="dateOfBirth"></span>
-        </div>
-        <div class="field">
-            <span class="label">Mobile Number:</span> <span id="mobileNumber"></span>
-        </div>
-        <div class="field">
-            <span class="label">Alternate Number:</span> <span id="alternateNumber"></span>
-        </div>
-        <div class="field">
-            <span class="label">Contact Person:</span> <span id="contactPerson"></span>
-        </div>
-        <div class="field">
-            <span class="label">Refer to Class:</span> <span id="referToClass"></span>
-        </div>
-        <div class="field">
-            <span class="label">Remarks:</span> <span id="remarks"></span>
-        </div>
-        <div class="field">
-            <span class="label">TC Provided:</span> <span id="tc"></span>
-        </div>
-        <div class="field">
-            <span class="label">Birth Certificate Provided:</span> <span id="birthCertificate"></span>
-        </div>
-        <div class="field">
-            <span class="label">Aadhar Number:</span> <span id="aadharNumber"></span>
-        </div>
-        <div class="field">
-            <span class="label">Belong to Minority Community:</span> <span id="doYouBelongToMinorityCommunity"></span>
-        </div>
-        <div class="field">
-            <span class="label">Physically Challenged:</span> <span id="areYouPhysicallyChallenged"></span>
-        </div>
-        <div class="field">
-            <span class="label">Mother's Qualification:</span> <span id="mothersQualification"></span>
-        </div>
-        <div class="field">
-            <span class="label">Mother's Income:</span> <span id="mothersIncome"></span>
-        </div>
-        <div class="field">
-            <span class="label">Mother's Profession:</span> <span id="mothersProfession"></span>
-        </div>
-        <div class="field">
-            <span class="label">Father's Qualification:</span> <span id="fathersQualification"></span>
-        </div>
-        <div class="field">
-            <span class="label">Father's Income:</span> <span id="fathersIncome"></span>
-        </div>
-        <div class="field">
-            <span class="label">Father's Profession:</span> <span id="fathersProfession"></span>
-        </div>
-        <div class="field">
-            <span class="label">Nationality:</span> <span id="nationality"></span>
-        </div>
-        <div class="field">
-            <span class="label">Religion:</span> <span id="religion"></span>
-        </div>
-        <div class="field">
-            <span class="label">Category:</span> <span id="category"></span>
-        </div>
-        <div class="field">
-            <span class="label">Last School Attended:</span> <span id="lastSchoolAttended"></span>
-        </div>
-        <div class="field">
-            <span class="label">Sibling in School:</span> <span id="nameOfBrotherSisterStudyiongInTheSchool"></span>
-        </div>
-        <div class="field">
-            <span class="label">Sibling Class:</span> <span id="siblingClass"></span>
-        </div>
-        <div class="field">
-            <span class="label">Enrollment Number:</span> <span id="enrollmentNumber"></span>
-        </div>
-        <div class="field">
-            <span class="label">Admission Number:</span> <span id="admissionNumber"></span>
-        </div>
-        <div class="field">
-            <span class="label">Created Date:</span> <span id="createdDate"></span>
-        </div>
-    </div>
+    <button id="create-pdf">Create PDF</button>
+    <button id="create-pdf-no-images">Create PDF (No Images)</button>
+
     <script>
-        window.onload = function() {
-            const params = new URLSearchParams(window.location.search);
-            const studentData = JSON.parse(decodeURIComponent(params.get('studentData')));
-            
-            for (const key in studentData) {
-                if (studentData.hasOwnProperty(key) && document.getElementById(key)) {
-                    document.getElementById(key).textContent = studentData[key];
+        document.addEventListener("DOMContentLoaded", function(event) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const studentData = JSON.parse(decodeURIComponent(urlParams.get('studentData')));
+
+            document.getElementById("create-pdf").addEventListener("click", function () {
+                createPDF(studentData, true);
+            });
+
+            document.getElementById("create-pdf-no-images").addEventListener("click", function () {
+                createPDF(studentData, false);
+            });
+        });
+
+        function createPDF(studentData, includeImages) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            const headerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1680087506/header1_iibqfp.jpg";
+            const footerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1680087505/footer1_uanlwv.jpg";
+            const headerAspectRatio = 2481 / 547;
+            const footerAspectRatio = 2481 / 212;
+            const headerWidth = 210; // A4 page width in mm
+            const headerHeight = headerWidth / headerAspectRatio;
+            const footerWidth = 210; // A4 page width in mm
+            const footerHeight = footerWidth / footerAspectRatio;
+
+            function addHeaderAndFooter() {
+                if (includeImages) {
+                    doc.addImage(headerImageUrl, 'PNG', 0, 0, headerWidth, headerHeight);
+                    doc.addImage(footerImageUrl, 'PNG', 0, 297 - footerHeight, footerWidth, footerHeight);
                 }
             }
-        };
+
+            addHeaderAndFooter();
+            let startY = headerHeight + 5;
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(12);
+            doc.text('St. Joseph\'s College', 105, startY, null, null, 'center');
+
+            startY += 10;
+            doc.text(`Date: ${studentData.createdDate}`, 190, startY, null, null, 'right');
+
+            startY += 10;
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(14);
+            doc.text('Admission Form', 105, startY, null, null, 'center');
+
+            startY += 10;
+            doc.setFontSize(12);
+            doc.text(`Admission No.: ${studentData.admissionNumber || ''}`, 105, startY, null, null, 'center');
+
+            startY += 10;
+            doc.text(`Enrollment No.: ${studentData.enrollmentNumber || ''}`, 105, startY, null, null, 'center');
+
+            startY += 10;
+
+            doc.autoTable({
+                startY: startY,
+                head: [['Field', 'Information']],
+                body: [
+                    ['Student Name', studentData.studentName || ''],
+                    ['Father\'s Name', studentData.fathersName || ''],
+                    ['Mother\'s Name', studentData.mothersName || ''],
+                    ['Gender', studentData.gender || ''],
+                    ['Address', studentData.address || ''],
+                    ['Local Address', studentData.localAddress || ''],
+                    ['Mobile Number', studentData.mobileNumber.toString() || ''],
+                    ['Alternate Number', studentData.alternateNumber.toString() || ''],
+                    ['Contact Person', studentData.contactPerson || ''],
+                    ['Refer To Class', studentData.referToClass || ''],
+                    ['Date of Birth', `${studentData.dateOfBirth}` || ''],
+                    ['TC Provided', studentData.tc ? 'Yes' : 'No'],
+                    ['Birth Certificate Provided', studentData.birthCertificate ? 'Yes' : 'No'],
+                    ['Aadhar Number', studentData.aadharNumber.toString() || ''],
+                    ['Minority Community', studentData.doYouBelongToMinorityCommunity ? 'Yes' : 'No'],
+                    ['Physically Challenged', studentData.areYouPhysicallyChallenged ? 'Yes' : 'No'],
+                    ['Mother\'s Qualification', studentData.mothersQualification || ''],
+                    ['Mother\'s Income', studentData.mothersIncome.toString() || ''],
+                    ['Mother\'s Profession', studentData.mothersProfession || ''],
+                    ['Father\'s Qualification', studentData.fathersQualification || ''],
+                    ['Father\'s Income', studentData.fathersIncome.toString() || ''],
+                    ['Father\'s Profession', studentData.fathersProfession || ''],
+                    ['Nationality', studentData.nationality || ''],
+                    ['Religion', studentData.religion || ''],
+                    ['Category', studentData.category || ''],
+                    ['Last School Attended', studentData.lastSchoolAttended || ''],
+                    ['Sibling in School', studentData.nameOfBrotherSisterStudyiongInTheSchool || ''],
+                    ['Sibling Class', studentData.siblingClass || ''],
+                    ['Remarks', studentData.remarks || ''],
+                ],
+                theme: 'grid',
+                tableWidth: 'auto',
+            });
+
+            const finalY = doc.internal.pageSize.height - 30;
+            doc.setFontSize(10);
+            doc.text('Signature of the Parent:', 20, finalY);
+            doc.text('Prepared By:', 105, finalY, null, null, 'center');
+            doc.text('Authorized By:', 190, finalY, null, null, 'right');
+
+            let fileName = studentData.admissionNumber ? `${studentData.admissionNumber}.pdf` : 'admission-form.pdf';
+            doc.save(fileName);
+        }
     </script>
 </body>
 </html>
