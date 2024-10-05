@@ -177,7 +177,7 @@
                 tableWidth: 'auto',
             });
 
-            const finalY = doc.internal.pageSize.height - 30;
+            const finalY = doc.previousAutoTable.finalY + 10;
             doc.setFontSize(10);
             doc.text('Date:', 10, finalY);
             doc.text('PARENT/GUARDIAN SIGNATURE', 70, finalY, null, null, 'center');
