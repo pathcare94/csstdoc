@@ -104,6 +104,10 @@
 
             startY += 10;
 
+            // Admission Form Container
+            doc.rect(10, startY, 190, 200); // Draw container box for Admission Form
+            startY += 10;
+
             doc.autoTable({
                 startY: startY,
                 head: [['Field', 'Information']],
@@ -155,8 +159,11 @@
             doc.text('PARENT/GUARDIAN SIGNATURE', 70, startY, null, null, 'center');
             doc.text('PRINCIPAL'S SIGNATURE', 190, startY, null, null, 'right');
 
-            // Admission Slip
+            // Admission Slip Container
             startY += 30;
+            doc.rect(10, startY, 190, 80); // Draw container box for Admission Slip
+            startY += 10;
+
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(14);
             doc.text('Admission Slip', 105, startY, null, null, 'center');
