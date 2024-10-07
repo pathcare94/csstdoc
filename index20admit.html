@@ -85,7 +85,7 @@
 
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(12);
-            doc.text('St. Joseph's College', 105, startY, { align: 'center' });
+            doc.text('St. Joseph\'s College', 105, startY, { align: 'center' });
 
             startY += 10;
             doc.text(`Date: ${studentData.createdDate}`, 190, startY, { align: 'right' });
@@ -113,8 +113,8 @@
                 head: [['Field', 'Information']],
                 body: [
                     ['Student Name', studentData.studentName || ''],
-                    ['Father's Name', studentData.fathersName || ''],
-                    ['Mother's Name', studentData.mothersName || ''],
+                    ['Father\'s Name', studentData.fathersName || ''],
+                    ['Mother\'s Name', studentData.mothersName || ''],
                     ['Gender', studentData.gender || ''],
                     ['Address', studentData.address || ''],
                     ['Local Address', studentData.localAddress || ''],
@@ -128,12 +128,12 @@
                     ['Aadhar Number', studentData.aadharNumber.toString() || ''],
                     ['Minority Community', studentData.doYouBelongToMinorityCommunity ? 'Yes' : 'No'],
                     ['Physically Challenged', studentData.areYouPhysicallyChallenged ? 'Yes' : 'No'],
-                    ['Mother's Qualification', studentData.mothersQualification || ''],
-                    ['Mother's Income', studentData.mothersIncome.toString() || ''],
-                    ['Mother's Profession', studentData.mothersProfession || ''],
-                    ['Father's Qualification', studentData.fathersQualification || ''],
-                    ['Father's Income', studentData.fathersIncome.toString() || ''],
-                    ['Father's Profession', studentData.fathersProfession || ''],
+                    ['Mother\'s Qualification', studentData.mothersQualification || ''],
+                    ['Mother\'s Income', studentData.mothersIncome.toString() || ''],
+                    ['Mother\'s Profession', studentData.mothersProfession || ''],
+                    ['Father\'s Qualification', studentData.fathersQualification || ''],
+                    ['Father\'s Income', studentData.fathersIncome.toString() || ''],
+                    ['Father\'s Profession', studentData.fathersProfession || ''],
                     ['Nationality', studentData.nationality || ''],
                     ['Religion', studentData.religion || ''],
                     ['Category', studentData.category || ''],
@@ -157,7 +157,7 @@
             doc.setFont('helvetica', 'normal');
             doc.text('Date:', 10, startY);
             doc.text('Parent/Guardian Signature', 70, startY, { align: 'center' });
-            doc.text('Principal's Signature', 190, startY, { align: 'right' });
+            doc.text('Principal\'s Signature', 190, startY, { align: 'right' });
 
             // Admission Slip Container
             startY += 40;
@@ -178,7 +178,7 @@
                 head: [['Field', 'Information']],
                 body: [
                     ['Admission Form No.', ''],
-                    ['Father's Name', studentData.fathersName || ''],
+                    ['Father\'s Name', studentData.fathersName || ''],
                     ['Student Name', studentData.studentName || ''],
                     ['Admission to Class', studentData.referToClass || ''],
                     ['Date of Admission', studentData.createdDate || ''],
@@ -193,7 +193,7 @@
             doc.setFontSize(10);
             doc.text('Date:', 10, finalY);
             doc.text('Parent/Guardian Signature', 70, finalY, { align: 'center' });
-            doc.text('Principal's Signature', 190, finalY, { align: 'right' });
+            doc.text('Principal\'s Signature', 190, finalY, { align: 'right' });
 
             let fileName = studentData.admissionNumber ? `${studentData.admissionNumber}.pdf` : 'admission-form.pdf';
             doc.save(fileName);
