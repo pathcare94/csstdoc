@@ -70,8 +70,13 @@
                 }
             }
 
+            function addNewPage() {
+                doc.addPage();
+                addHeaderAndFooter();
+            }
+
             addHeaderAndFooter();
-            let startY = headerHeight + 10;
+            let startY = headerHeight + 15;
             const maxContentHeight = 297 - headerHeight - footerHeight - 20;
 
             doc.setFont('helvetica', 'bold');
@@ -135,18 +140,16 @@
                 pageBreak: 'auto',
                 didDrawPage: (data) => {
                     if (data.cursor.y > maxContentHeight) {
-                        doc.addPage();
-                        addHeaderAndFooter();
-                        data.cursor.y = headerHeight + 10;
+                        addNewPage();
+                        data.cursor.y = headerHeight + 15;
                     }
                 }
             });
 
             startY = doc.previousAutoTable.finalY + 10;
             if (startY > maxContentHeight) {
-                doc.addPage();
-                addHeaderAndFooter();
-                startY = headerHeight + 10;
+                addNewPage();
+                startY = headerHeight + 15;
             }
             doc.setFontSize(10);
             doc.text('I certify that the above information is true. I agree to abide by the rules and regulations of the school.', 10, startY);
@@ -163,9 +166,8 @@
             // Divider before Admission Slip
             startY += 30;
             if (startY > maxContentHeight) {
-                doc.addPage();
-                addHeaderAndFooter();
-                startY = headerHeight + 10;
+                addNewPage();
+                startY = headerHeight + 15;
             }
             doc.setDrawColor(0);
             doc.setLineWidth(0.5);
@@ -198,18 +200,16 @@
                 margin: { left: 12, right: 12 },
                 didDrawPage: (data) => {
                     if (data.cursor.y > maxContentHeight) {
-                        doc.addPage();
-                        addHeaderAndFooter();
-                        data.cursor.y = headerHeight + 10;
+                        addNewPage();
+                        data.cursor.y = headerHeight + 15;
                     }
                 }
             });
 
             const finalY = doc.previousAutoTable.finalY + 10;
             if (finalY > maxContentHeight) {
-                doc.addPage();
-                addHeaderAndFooter();
-                startY = headerHeight + 10;
+                addNewPage();
+                startY = headerHeight + 15;
             } else {
                 startY = finalY;
             }
