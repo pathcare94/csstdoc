@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission Form PDF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            font-size: 16px;
+            color: white;
+        }
+        #create-pdf {
+            background-color: #4CAF50;
+        }
+        #create-pdf-no-images {
+            background-color: #2196F3;
+        }
+        .container {
+            border: 2px solid black;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .signature-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+        .signature-placeholder {
+            width: 30%;
+            text-align: center;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <button id="create-pdf">Create PDF</button>
+    <button id="create-pdf-no-images">Create PDF (No Images)</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const studentData = JSON.parse(decodeURIComponent(urlParams.get('studentData')));
+
+            document.getElementById("create-pdf").addEventListener("click", function () {
+                createPDF(studentData, true);
+            });
+
+            document.getElementById("create-pdf-no-images").addEventListener("click", function () {
+                createPDF(studentData, false);
+            });
+        });
+
+        function createPDF(studentData, includeImages) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            const headerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1680087506/header1_iibqfp.jpg";
+            const footerImageUrl = "https://res.cloudinary.com/dfo9alrtf/image/upload/v1680087505/footer1_uanlwv.jpg";
+            const headerAspectRatio = 2481 / 547;
+            const footerAspectRatio = 2481 / 212;
+            const headerWidth = 210; // A4 page width in mm
+            const headerHeight = headerWidth / headerAspectRatio;
+            const footerWidth = 210; // A4 page width in mm
+            const footerHeight = footerWidth / footerAspectRatio;
+
+            function addHeaderAndFooter() {
+                if (includeImages) {
+                    doc.addImage(headerImageUrl, 'PNG', 0, 0, headerWidth, headerHeight);
+                    doc.addImage(footerImageUrl, 'PNG', 0, 297 - footerHeight, footerWidth, footerHeight);
+                }
+            }
+
+            addHeaderAndFooter();
+            let startY = headerHeight + 10;
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(12);
+            doc.text('St. Joseph\'s College', 105, startY, { align: 'center' });
+
+            startY += 10;
+            doc.text(`Date: ${studentData.createdDate}`, 190, startY, { align: 'right' });
+
+            startY += 10;
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(14);
+            doc.text('Admission Form', 105, startY, { align: 'center' });
+
+            startY += 10;
+            doc.setFontSize(12);
+            doc.text(`Admission No.: ${studentData.admissionNumber || ''}`, 105, startY, { align: 'center' });
+
+            startY += 10;
+            doc.text(`Enrollment No.: ${studentData.enrollmentNumber || ''}`, 105, startY, { align: 'center' });
+
+            startY += 10;
+
+            // Admission Form Table
+            doc.autoTable({
+                startY: startY,
+                head: [['Field', 'Information']],
+                body: [
+                    ['Student Name', studentData.studentName || ''],
+                    ['Father\'s Name', studentData.fathersName || ''],
+                    ['Mother\'s Name', studentData.mothersName || ''],
+                    ['Gender', studentData.gender || ''],
+                    ['Address', studentData.address || ''],
+                    ['Local Address', studentData.localAddress || ''],
+                    ['Mobile Number', studentData.mobileNumber.toString() || ''],
+                    ['Alternate Number', studentData.alternateNumber.toString() || ''],
+                    ['Contact Person', studentData.contactPerson || ''],
+                    ['Refer To Class', studentData.referToClass || ''],
+                    ['Date of Birth', `${studentData.dateOfBirth}` || ''],
+                    ['TC Provided', studentData.tc ? 'Yes' : 'No'],
+                    ['Birth Certificate Provided', studentData.birthCertificate ? 'Yes' : 'No'],
+                    ['Aadhar Number', studentData.aadharNumber.toString() || ''],
+                    ['Minority Community', studentData.doYouBelongToMinorityCommunity ? 'Yes' : 'No'],
+                    ['Physically Challenged', studentData.areYouPhysicallyChallenged ? 'Yes' : 'No'],
+                    ['Mother\'s Qualification', studentData.mothersQualification || ''],
+                    ['Mother\'s Income', studentData.mothersIncome.toString() || ''],
+                    ['Mother\'s Profession', studentData.mothersProfession || ''],
+                    ['Father\'s Qualification', studentData.fathersQualification || ''],
+                    ['Father\'s Income', studentData.fathersIncome.toString() || ''],
+                    ['Father\'s Profession', studentData.fathersProfession || ''],
+                    ['Nationality', studentData.nationality || ''],
+                    ['Religion', studentData.religion || ''],
+                    ['Category', studentData.category || ''],
+                    ['Last School Attended', studentData.lastSchoolAttended || ''],
+                    ['Sibling in School', studentData.nameOfBrotherSisterStudyiongInTheSchool || ''],
+                    ['Sibling Class', studentData.siblingClass || ''],
+                    ['Remarks', studentData.remarks || ''],
+                ],
+                theme: 'grid',
+                tableWidth: 'auto',
+                styles: {
+                    cellWidth: 'wrap',
+                },
+                columnStyles: {
+                    0: { cellWidth: 70 }, // Set a fixed width for the first column
+                    1: { cellWidth: 'auto' }, // The second column will adjust based on content
+                },
+            });
+
+            startY = doc.previousAutoTable.finalY + 10;
+            doc.setFontSize(10);
+            doc.text('I certify that the above information is true. I agree to abide by the rules and regulations of the school.', 10, startY);
+            startY += 5;
+            doc.text('Note - N.B.T.C/Birth Certificate and Aadhar card copy is required at the time of admission.', 10, startY);
+
+            startY += 20;
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Date:', 10, startY);
+            doc.text('Parent/Guardian Signature', 70, startY, { align: 'center' });
+            doc.text('Principal\'s Signature', 190, startY, { align: 'right' });
+
+            // Divider line before Admission Slip
+            startY += 20;
+            doc.setLineWidth(0.5);
+            doc.line(10, startY, 200, startY);
+
+            startY += 10;
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(14);
+            doc.text('Admission Slip', 105, startY, { align: 'center' });
+
+            startY += 10;
+            doc.setFontSize(12);
+            doc.text('For Office Use Only', 15, startY);
+
+            startY += 10;
+            doc.autoTable({
+                startY: startY,
+                head: [['Field', 'Information']],
+                body: [
+                    ['Admission Form No.', ''],
+                    ['Father\'s Name', studentData.fathersName || ''],
+                    ['Student Name', studentData.studentName || ''],
+                    ['Admission to Class', studentData.referToClass || ''],
+                    ['Date of Admission', studentData.createdDate || ''],
+                    ['Admission Number', studentData.admissionNumber || ''],
+                    ['Remarks', studentData.remarks || ''],
+                ],
+                theme: 'grid',
+                tableWidth: 'auto',
+                styles: {
+                    cellWidth: 'wrap',
+                },
+                columnStyles: {
+                    0: { cellWidth: 70 }, // Set a fixed width for the first column
+                    1: { cellWidth: 'auto' }, // The second column will adjust based on content
+                },
+            });
+
+            const finalY = doc.previousAutoTable.finalY + 10;
+            doc.setFontSize(10);
+            doc.text('Date:', 10, finalY);
+            doc.text('Parent/Guardian Signature', 70, finalY, { align: 'center' });
+            doc.text('Principal\'s Signature', 190, finalY, { align: 'right' });
+
+            let fileName = studentData.admissionNumber ? `${studentData.admissionNumber}.pdf` : 'admission-form.pdf';
+            doc.save(fileName);
+        }
+    </script>
+</body>
+</html>
