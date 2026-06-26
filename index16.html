@@ -48,14 +48,14 @@
     
     let data = null;
 
-window.addEventListener("message", (event) => {
+window.onmessage = function(event) {
     console.log("Received data from Wix:", event.data);
 
     data = event.data;
 
     document.getElementById("create-pdf").disabled = false;
     document.getElementById("create-pdf-no-images").disabled = false;
-});
+};
 // const infoText = decodeURIComponent(getQueryParam('infoText'));
 // const data = JSON.parse(infoText);
 
