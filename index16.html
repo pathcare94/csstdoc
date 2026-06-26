@@ -45,8 +45,19 @@
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
     }
-const infoText = decodeURIComponent(getQueryParam('infoText'));
-const data = JSON.parse(infoText);
+    
+    let data = null;
+
+window.addEventListener("message", (event) => {
+    console.log("Received data from Wix:", event.data);
+
+    data = event.data;
+
+    document.getElementById("create-pdf").disabled = false;
+    document.getElementById("create-pdf-no-images").disabled = false;
+});
+// const infoText = decodeURIComponent(getQueryParam('infoText'));
+// const data = JSON.parse(infoText);
 
 function formatDate(dateString) {
     const date = new Date(dateString);
